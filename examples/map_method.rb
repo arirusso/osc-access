@@ -6,15 +6,10 @@ require "osc-object"
 class Instrument
   
   include OSCObject
-
-  attr_accessor :pitch, :velocity
       
-  attr_osc :pitch, "/1/fader1", :range => { :input => 0..1, :output => 0..127 }
+  attr_osc :pitch, :pattern => "/1/fader1", :range => { :input => 0..1, :output => 0..127 }
   
-  osc_map("/2/fader2", :from => 0..1, :to => 0..127) do |subject, value|
-    p value
-    subject.velocity = value
-  end
+  attr_osc :velocity, :pattern => "/2/fader2", :range => 0..127
   
 end
 
