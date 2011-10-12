@@ -9,7 +9,7 @@ class Instrument
 
   attr_accessor :pitch, :velocity
       
-  osc_map("/1/fader1", :from => 0..1, :to => 0..127, :method => :pitch=)
+  osc_writer :pitch, "/1/fader1", :range => { :input => 0..1, :output => 0..127 }
   
   osc_map("/2/fader2", :from => 0..1, :to => 0..127) do |subject, value|
     p value
