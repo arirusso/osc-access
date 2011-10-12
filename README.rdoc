@@ -1,0 +1,39 @@
+= osc-object
+
+Make any Ruby object an OSC server
+
+== Installation
+
+  gem install osc-object
+  
+== Usage
+
+  require "osc-object"
+
+  class Instrument
+  
+    attr_accessor :pitch
+    
+    osc_server 8000
+    
+    receive_osc "/1/fader1" do |msg|
+      new_pitch = analog(msg.value, (0..1), (0..127)) 
+      puts "raising pitch to #{new_pitch}"
+      self.pitch = new_pitch
+    end
+    
+    def initialize
+      @pitch = 0
+    end
+  
+  end
+
+== Documentation
+
+* {rdoc}[http://rubydoc.info/github/arirusso/<project-name>] 
+
+== License
+
+Licensed under Apache 2.0, See the file LICENSE
+
+Copyright © 2011 Ari Russo
