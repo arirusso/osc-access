@@ -2,6 +2,10 @@
 
 Make any Ruby object an OSC server
 
+== Requirements
+
+Requires eventmachine and osc-ruby which should install automatically with the gem
+
 == Installation
 
   gem install osc-object
@@ -17,20 +21,16 @@ Make any Ruby object an OSC server
     osc_server 8000
     
     receive_osc "/1/fader1" do |msg|
-      new_pitch = analog(msg.value, (0..1), (0..127)) 
-      puts "raising pitch to #{new_pitch}"
-      self.pitch = new_pitch
-    end
-    
-    def initialize
-      @pitch = 0
+      msg.from (0..1), :to => (0..127) do |val|
+        self.pitch = val
+      end
     end
   
   end
 
 == Documentation
 
-* {rdoc}[http://rubydoc.info/github/arirusso/<project-name>] 
+* {rdoc}[http://rubydoc.info/github/arirusso/osc-object] 
 
 == License
 

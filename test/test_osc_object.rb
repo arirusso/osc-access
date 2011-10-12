@@ -2,10 +2,9 @@
 
 require 'helper'
 
-class OSCServerTest < Test::Unit::TestCase
+class OSCObjectTest < Test::Unit::TestCase
 
   include OSCObject
-  include MIDIMessage
   include TestHelper
   
 end
