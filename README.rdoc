@@ -16,14 +16,18 @@ Requires eventmachine and osc-ruby which should install automatically with the g
 
   class Instrument
   
+    include OSCObject
+  
     attr_accessor :pitch
-    
-    osc_server 8000
-    
-    receive_osc "/1/fader1" do |msg|
-      msg.from (0..1), :to => (0..127) do |val|
-        self.pitch = val
+      
+    receive_osc "/1/fader1" do |subject, msg|
+      analog(msg.args.first, :from => 0..1, :to => 0..127) do |val|
+        subject.pitch = val
       end
+    end
+  
+    def initialize
+      start_receiving_osc.join
     end
   
   end
