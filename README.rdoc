@@ -1,10 +1,10 @@
 = osc-object
 
-Make any Ruby object an OSC server
+Control Ruby objects with OSC
 
 == Requirements
 
-Requires eventmachine and osc-ruby which should install automatically with the gem
+Requires {eventmachine}[] and {osc-ruby}[] which should install automatically with the gem
 
 == Installation
 
