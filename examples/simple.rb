@@ -14,17 +14,13 @@ class Instrument
       
   receive_osc "/1/fader1" do |subject, msg|
     
-    analog(msg.args.first, :from => 0..1, :to => 0..127) do |val|
+    map(msg.args.first, :from => 0..1, :to => 0..127) do |val|
       p "setting pitch to #{val}"
       subject.pitch = val
     end
     
   end
   
-  def initialize
-    start_receiving_osc.join
-  end
-  
 end
 
-Instrument.new
+Instrument.new(:join => true)
