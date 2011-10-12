@@ -62,7 +62,6 @@ module OSCObject
       raw_value = message.to_a.first
       computed_value = compute_value(raw_value, osc_range, mapping[:range], :type => mapping[:type])
       instrument.send(mapping[:property], computed_value) if instrument.respond_to?(mapping[:property])
-    #p "set #{mapping[:property]} to #{computed_value}"
     end
   end
 
