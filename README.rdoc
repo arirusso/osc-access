@@ -4,7 +4,7 @@ Control Ruby objects with OSC
 
 == Requirements
 
-Requires {eventmachine}[] and {osc-ruby}[] which should install automatically with the gem
+Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ruby}[http://github.com/aberant/osc-ruby] which should install automatically with the gem
 
 == Installation
 
@@ -12,9 +12,11 @@ Requires {eventmachine}[] and {osc-ruby}[] which should install automatically wi
   
 == Usage
 
-==== class definition
+There are two ways to use osc-object: by class definition or instance methods
 
-In this case, the pitch attribute of Instrument objects will be controlled by OSC messages with the address "/1/fader1"
+==== Class Definition
+
+By defining attr_osc, the pitch attribute of Instrument objects will then be controlled by OSC messages with the address "/1/fader1"
 
   require "osc-object"
 
@@ -26,9 +28,9 @@ In this case, the pitch attribute of Instrument objects will be controlled by OS
   
   end
 
-inst = Instrument.new(:join => true)
+  inst = Instrument.new(:join => true)
 
-==== ad-hoc
+==== Instance Methods
 
 inst.attr_osc(:velocity, "/2/fader2")
 
