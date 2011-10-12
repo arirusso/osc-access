@@ -12,7 +12,25 @@ Requires {eventmachine}[] and {osc-ruby}[] which should install automatically wi
   
 == Usage
 
+==== class definition
 
+In this case, the pitch attribute of Instrument objects will be controlled by OSC messages with the address "/1/fader1"
+
+  require "osc-object"
+
+  class Instrument
+  
+    include OSCObject
+      
+    attr_osc :pitch, :pattern => "/1/fader1", :range => { :input => 0..1, :output => 0..127 }
+  
+  end
+
+inst = Instrument.new(:join => true)
+
+==== ad-hoc
+
+inst.attr_osc(:velocity, "/2/fader2")
 
 == Documentation
 
