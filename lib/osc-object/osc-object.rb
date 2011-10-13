@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 module OSCObject
   
+  DefaultPattern = /.*/
   DefaultReceivePort = 8000
   
   def initialize(options = {})
@@ -14,6 +15,7 @@ module OSCObject
 
     # pull osc server info from class instance vars
     @osc_server = self.class.osc_server || OSC::EMServer.new(port)
+    @osc_client = OSC::Client.new( '192.168.1.9', 9000 )
     self.class.osc_patterns.each { |pattern, block| receive_osc(pattern.dup, &block) }
     
     load_hash_map(map) unless map.nil?
@@ -33,18 +35,32 @@ module OSCObject
 
     attr_reader :osc_patterns, :osc_server
     
-    def osc_map(pattern, options = {}, &block)
-      raise "osc map must have :method or block" if options[:method].nil? && block.nil?
+    def osc_accessor(attr, options = {}, &block)
+      pattern = options[:pattern] || DefaultPattern
       receive_osc(pattern) do |this, msg|
-        map(msg.args.first, :from => 0..1, :to => 0..127) do |val|
-          block.nil? ? this.send(options[:method], val) : yield(this, val)
+        if options[:range].nil?
+          val = msg.args.first 
+        else
+          if options[:range].kind_of?(Range)
+            input = 0..1
+            output = options[:range]
+          else
+            input = options[:range][:input] || (0..1)
+            output = options[:range][:output]
+          end
+          val = map_range(msg.args.first, input, output)
         end
+        unless options[:return].nil?
+          client = this.instance_variable_get("@osc_client")
+          return_value = case options[:return]
+            when :value then val
+            when Proc then options[:return].call(msg)
+            else options[:return]
+          end
+          client.send(OSC::Message.new( msg.address , return_value ))
+        end
+        block.nil? ? this.instance_variable_set("@#{attr}", val) : yield(this, val)
       end
-    end
-    
-    def map(value, options = {}, &block)
-      new_val = RangeAnalog.new(options[:from], options[:to]).process(value)
-      yield(new_val)
     end
     
     def receive_osc(pattern, options = {}, &block)
@@ -60,13 +76,22 @@ module OSCObject
       end
       @osc_receive_port
     end
+    
+    private
+    
+    def map_range(value, input, output, &block)
+      RangeAnalog.new(input, output).process(value)
+    end
 
   end
 
   private
   
   def start_osc_server
-    Thread.new { @osc_server.run }
+    Thread.new do 
+      Thread.abort_on_exception = true
+      @osc_server.run
+    end
   end
 
   def add_hash_mapping(mapping)
