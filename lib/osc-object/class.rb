@@ -5,7 +5,7 @@ module OSCObject
 
     attr_reader :osc_class_scheme
 
-    def osc_accessor(*a)
+    def osc_accessor(*a, &block)
       ensure_initialized
       @osc_class_scheme.add_accessor(*a, &block) 
     end
@@ -21,10 +21,12 @@ module OSCObject
     end
     
     def osc_send_ip(ip)
+      ensure_initialized
       @osc_class_scheme.send_ip = ip
     end
     
     def osc_port(val)
+      ensure_initialized
       @osc_class_scheme.ports = val
     end
     

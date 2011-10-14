@@ -28,15 +28,15 @@ module OSCObject
     end
     
     def add_accessor(attr, options = {}, &block)
-      @accessors[attr] = options
+      @accessors[attr] = { :options => options, :block => block }
     end
     
     def add_reader(attr, options = {}, &block)
-      @readers[attr] = options
+      @readers[attr] = { :options => options, :block => block }
     end
     
     def add_writer(attr, options = {}, &block)
-      @writers[attr] = options
+      @writers[attr] = { :options => options, :block => block }
     end
     
   end
