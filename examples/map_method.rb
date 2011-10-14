@@ -6,9 +6,13 @@ require "osc-object"
 class Instrument
   
   include OSCObject
+  
+  osc_port :receive => 8000, :send => 9000
       
-  osc_accessor :pitch, :pattern => "/1/fader1", :range => { :osc => 0..1, :property => 0..127 }, :return => :value
-  osc_writer :pulse_width, :pattern => "/1/fader2"
+  osc_accessor :pitch, 
+               :pattern => "/1/fader1", 
+               :range => { :remote => 0..1, :local => 0..127 }
+  #osc_writer :pulse_width, :pattern => "/1/fader2"
   
   #attr_osc :velocity, :pattern => "/1/rotary1", :range => 0..127
   

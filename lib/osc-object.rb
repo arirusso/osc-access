@@ -12,9 +12,13 @@ require "osc-ruby"
 require "osc-ruby/em_server"
 
 # modules
-require "osc-object/osc-object"
+require "osc-object/default"
+require "osc-object/osc_object"
+require "osc-object/osc_object_class"
 
 # classes
+require "osc-object/osc_action_scheme"
+require "osc-object/osc_io"
 require "osc-object/osc_message"
 require "osc-object/range_analog"
 
