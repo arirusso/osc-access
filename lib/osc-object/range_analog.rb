@@ -22,14 +22,17 @@ module OSCObject
     end
 
     def self.process(value, range)
-      if range.kind_of?(Range)
-        remote = 0..1
-        local = range
-      else
-        remote = range[:remote] || (0..1)
-        local = range[:local]
+      new_vals = [value].flatten.map do |single_value|
+        if range.kind_of?(Range)
+          remote = 0..1
+          local = range
+        else
+          remote = range[:remote] || (0..1)
+          local = range[:local]
+        end
+        RangeAnalog.new(remote, local).process(value)
       end
-      RangeAnalog.new(remote, local).process(value)
+      value.kind_of?(Array) ? new_vals : new_vals.first
     end
 
   end
