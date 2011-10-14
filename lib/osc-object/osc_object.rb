@@ -34,11 +34,11 @@ module OSCObject
     val = if options[:range].nil?
       options[:array] ? msg.args : msg.args.first
     else
-      analog_value(msg.args.first, options[:range])
+      RangeAnalog.process(msg.args.first, options[:range])
     end
     p val
-    return_msg(msg, options) unless options[:return] == false
-    block.nil? ? instance_variable_set("@#{attr}", val) : yield(val)
+    return_osc(msg, options) unless options[:return] == false
+    block.nil? ? instance_variable_set("@#{attr}", val) : yield(self, val)
   end
 
   private
@@ -57,24 +57,9 @@ module OSCObject
     @map.each { |mapping| add_hash_mapping(mapping) }
   end
 
-  def analog_value(value, range)
-    if range.kind_of?(Range)
-    remote = 0..1
-    local = range
-    else
-      remote = range[:remote] || (0..1)
-      local = range[:local]
-    end
-    map_range(value, remote, local)
-  end
-
-  def return_msg(msg, options = {})
+  def return_osc(msg, options = {})
     val = options[:array] ? msg.args : msg.args.first
     @osc.transmit(OSC::Message.new(msg.address, val))
   end
-
-  def map_range(value, input, output, &block)
-    RangeAnalog.new(input, output).process(value)
-  end
-
+  
 end

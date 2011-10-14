@@ -5,7 +5,7 @@ module OSCObject
 
     attr_reader :osc_action_scheme
 
-    def osc_accessor(*a, &block)
+    def osc_accessor(*a)
       ensure_initialized
       @osc_action_scheme.add_accessor(*a, &block) 
     end
@@ -14,10 +14,12 @@ module OSCObject
       
     end
     
-    # ensure that @osc_action_scheme is initialized and delegate to it
-    def method_missing(method, *args, &block)
-      ensure_initialized
-      @osc_action_scheme.respond_to?(method) ? @osc_action_scheme.send(method, *args, &block) : super
+    def osc_send_ip(ip)
+      @osc_action_scheme.send_ip = ip
+    end
+    
+    def osc_port(val)
+      @osc_action_scheme.ports = val
     end
     
     private

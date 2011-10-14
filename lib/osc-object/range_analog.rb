@@ -5,11 +5,11 @@ module OSCObject
     
     def initialize(from_range, to_range, options = {})
       @type = options[:type]
-      
+
       @from_range = from_range
       @to_range = to_range
     end
-    
+
     def process(input, options = {})
       to_range_length = @to_range.last - @to_range.first
       from_range_length = @from_range.last - @from_range.first
@@ -20,7 +20,18 @@ module OSCObject
       float_requested = !type.nil? && type.to_s.downcase == "float"
       float_requested ? computed_value : computed_value.to_i
     end
-    
+
+    def self.process(value, range)
+      if range.kind_of?(Range)
+        remote = 0..1
+        local = range
+      else
+        remote = range[:remote] || (0..1)
+        local = range[:local]
+      end
+      RangeAnalog.new(remote, local).process(value)
+    end
+
   end
 
 end

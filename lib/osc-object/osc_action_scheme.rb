@@ -3,7 +3,9 @@ module OSCObject
   
   class OSCActionScheme
 
-    attr_reader :accessors, :send_ip, :server
+    attr_accessor :send_ip
+    attr_reader :accessors, :server
+    attr_writer :ports
     
     def initialize(options = {})
       @ports = { :receive => nil, :send => nil }
@@ -26,15 +28,7 @@ module OSCObject
     end
     
     def add_accessor(attr, options = {}, &block)
-      @accessors[attr] = { :options => options, :block => block }
-    end
-
-    def osc_send_ip(ip)
-      @send_ip = ip
-    end
-
-    def osc_port(port)
-      @ports = port
+      @accessors[attr] = options
     end
     
   end
