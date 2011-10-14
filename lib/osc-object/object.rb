@@ -49,11 +49,12 @@ module OSCObject
   private
   
   def set_local_value_from_osc(attr, msg, options = {})
-    val = if options[:range].nil?
-      options[:array] ? msg.args : msg.args.first
-    else
-      RangeAnalog.process(msg.args.first, options[:range])
-    end
+    arg = options[:arg] || 0
+    array = (!arg.nil? && arg == :all)
+    use_range = !options[:range].nil?
+    
+    val = array ? msg.args : msg.args[arg]
+    val = RangeAnalog.process(val, options[:range]) if use_range
     p val
     instance_variable_set("@#{attr}", val)
   end
