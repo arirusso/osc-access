@@ -2,7 +2,7 @@
 module OSCObject
   
   def initialize(options = {})
-    start_receiving_osc(options)
+    osc_start(options)
   end
   
   def osc_reader(attr, options = {}, &block)
@@ -30,7 +30,7 @@ module OSCObject
 
   protected
 
-  def start_receiving_osc(options = {})
+  def osc_start(options = {})
     scheme = self.class.osc_class_scheme
     @osc = IO.new(self, scheme, options)
     scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
@@ -43,6 +43,7 @@ module OSCObject
   def on_receive_osc(attr, msg, options = {}, &block)
     set_local_value_from_osc(attr, msg, options) unless options[:set_local] == false
     return_osc(msg, options) unless options[:get_local] == false
+    yield(self, val) unless block.nil?
   end
 
   private
@@ -54,7 +55,7 @@ module OSCObject
       RangeAnalog.process(msg.args.first, options[:range])
     end
     p val
-    block.nil? ? instance_variable_set("@#{attr}", val) : yield(self, val)
+    instance_variable_set("@#{attr}", val)
   end
   
   def add_hash_mapping(mapping)
