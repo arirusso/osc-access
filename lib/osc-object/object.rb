@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 module OSCObject
   
+  def self.included(base)
+    base.extend(Class)
+  end
+  
   def initialize(options = {})
     osc_start(options)
   end
@@ -23,27 +27,27 @@ module OSCObject
   def osc_receive(pattern, &block)
     @osc.receive(self, pattern, &block)
   end
-
-  def self.included(base)
-    base.extend(Class)
-  end
   
   def osc_return(msg, options = {})
     val = options[:array] ? msg.args : msg.args.first
     @osc.transmit(OSC::Message.new(msg.address, val))
   end
-
-  protected
+  
+  def osc_join
+    @osc.thread.join
+  end
 
   def osc_start(options = {})
     scheme = self.class.osc_class_scheme
     @osc = IO.new(self, scheme, options)
     scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
     #load_hash_map(map) unless map.nil?
-    thread = @osc.start
-    thread.join if options[:join]
-    thread
+    @osc.start
+    osc_join if options[:join]
+    @osc.thread
   end
+  
+  protected
 
   def osc_on_receive(attr, msg, options = {}, &block)
     osc_set_local_value(attr, msg, options) unless options[:set_local] == false

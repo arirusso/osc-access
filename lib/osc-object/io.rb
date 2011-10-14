@@ -3,6 +3,11 @@ module OSCObject
   
   class IO
     
+    extend Forwardable
+    
+    attr_reader :thread
+    def_delegators :thread, :join, :exit
+    
     def initialize(target_obj, scheme, options = {})
       ports = scheme.ports
       port = ports[:receive] || options[:receive_port] || DefaultReceivePort
@@ -29,7 +34,7 @@ module OSCObject
     end
 
     def start
-      Thread.new do
+      @thread = Thread.new do
         Thread.abort_on_exception = true
         @server.run
       end
