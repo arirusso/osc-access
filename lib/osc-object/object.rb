@@ -17,15 +17,20 @@ module OSCObject
     
   def osc_accessor(attr, options = {}, &block)
     pattern = options[:pattern] || DefaultPattern
-    receive_osc(pattern) { |this, msg| on_receive_osc(attr, msg, options, &block) }
+    osc_receive(pattern) { |this, msg| on_receive_osc(attr, msg, options, &block) }
   end
 
-  def receive_osc(pattern, &block)
+  def osc_receive(pattern, &block)
     @osc.receive(self, pattern, &block)
   end
 
   def self.included(base)
     base.extend(Class)
+  end
+  
+  def osc_return(msg, options = {})
+    val = options[:array] ? msg.args : msg.args.first
+    @osc.transmit(OSC::Message.new(msg.address, val))
   end
 
   protected
@@ -40,15 +45,15 @@ module OSCObject
     thread
   end
 
-  def on_receive_osc(attr, msg, options = {}, &block)
-    set_local_value_from_osc(attr, msg, options) unless options[:set_local] == false
-    return_osc(msg, options) unless options[:get_local] == false
+  def osc_on_receive(attr, msg, options = {}, &block)
+    osc_set_local_value(attr, msg, options) unless options[:set_local] == false
+    osc_return(msg, options) unless options[:get_local] == false
     yield(self, val) unless block.nil?
   end
 
   private
   
-  def set_local_value_from_osc(attr, msg, options = {})
+  def osc_set_local_value(attr, msg, options = {})
     arg = options[:arg] || 0
     array = (!arg.nil? && arg == :all)
     use_range = !options[:range].nil?
@@ -59,7 +64,7 @@ module OSCObject
     instance_variable_set("@#{attr}", val)
   end
   
-  def add_hash_mapping(mapping)
+  def osc_add_hash_mapping(mapping)
     osc_range = mapping[:osc_range] || (0..1)
     @server.add_method(mapping[:pattern]) do | message |
       raw_value = message.to_a.first
@@ -68,14 +73,9 @@ module OSCObject
     end
   end
 
-  def load_hash_map(map)
+  def osc_load_hash_map(map)
     @map = map
     @map.each { |mapping| add_hash_mapping(mapping) }
   end
 
-  def return_osc(msg, options = {})
-    val = options[:array] ? msg.args : msg.args.first
-    @osc.transmit(OSC::Message.new(msg.address, val))
-  end
-  
 end
