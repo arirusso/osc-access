@@ -11,7 +11,13 @@ module OSCObject
     end
     
     def osc_writer(attr, options = {}, &block)
-      
+      ensure_initialized
+      @osc_class_scheme.add_writer(*a, &block)       
+    end
+    
+    def osc_reader(attr, options = {}, &block)
+      ensure_initialized
+      @osc_class_scheme.add_reader(*a, &block)       
     end
     
     def osc_send_ip(ip)

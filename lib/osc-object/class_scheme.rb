@@ -4,14 +4,14 @@ module OSCObject
   class ClassScheme
 
     attr_accessor :send_ip
-    attr_reader :accessors, :server
+    attr_reader :accessors, :readers, :server, :writers
     attr_writer :ports
     
     def initialize(options = {})
       @ports = { :receive => nil, :send => nil }
       port = @ports[:receive] || options[:port] || OSCObject::DefaultReceivePort
       @server = OSC::EMServer.new(port)
-      @accessors = {}
+      @accessors, @readers, @writers = {}, {}, {}
     end
     
     def ports
@@ -29,6 +29,14 @@ module OSCObject
     
     def add_accessor(attr, options = {}, &block)
       @accessors[attr] = options
+    end
+    
+    def add_reader(attr, options = {}, &block)
+      @readers[attr] = options
+    end
+    
+    def add_writer(attr, options = {}, &block)
+      @writers[attr] = options
     end
     
   end
