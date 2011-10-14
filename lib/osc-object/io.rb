@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module OSCObject
   
-  class OSCIO
+  class IO
     
     def initialize(target_obj, scheme, options = {})
       ports = scheme.ports

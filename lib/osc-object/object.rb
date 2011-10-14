@@ -5,6 +5,16 @@ module OSCObject
     start_receiving_osc(options)
   end
   
+  def osc_reader(attr, options = {}, &block)
+    options[:get_local] = false
+    osc_accessor(attr, options, &block)
+  end
+  
+  def osc_writer(attr, options = {}, &block)
+    options[:set_local] = false
+    osc_accessor(attr, options, &block)
+  end
+    
   def osc_accessor(attr, options = {}, &block)
     pattern = options[:pattern] || DefaultPattern
     receive_osc(pattern) { |this, msg| on_receive_osc(attr, msg, options, &block) }
@@ -15,14 +25,14 @@ module OSCObject
   end
 
   def self.included(base)
-    base.extend(OSCObjectClass)
+    base.extend(Class)
   end
 
   protected
 
   def start_receiving_osc(options = {})
-    scheme = self.class.osc_action_scheme
-    @osc = OSCIO.new(self, scheme, options)
+    scheme = self.class.osc_class_scheme
+    @osc = IO.new(self, scheme, options)
     scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
     #load_hash_map(map) unless map.nil?
     thread = @osc.start
@@ -31,18 +41,22 @@ module OSCObject
   end
 
   def on_receive_osc(attr, msg, options = {}, &block)
+    set_local_value_from_osc(attr, msg, options) unless options[:set_local] == false
+    return_osc(msg, options) unless options[:get_local] == false
+  end
+
+  private
+  
+  def set_local_value_from_osc(attr, msg, options = {})
     val = if options[:range].nil?
       options[:array] ? msg.args : msg.args.first
     else
       RangeAnalog.process(msg.args.first, options[:range])
     end
     p val
-    return_osc(msg, options) unless options[:return] == false
     block.nil? ? instance_variable_set("@#{attr}", val) : yield(self, val)
   end
-
-  private
-
+  
   def add_hash_mapping(mapping)
     osc_range = mapping[:osc_range] || (0..1)
     @server.add_method(mapping[:pattern]) do | message |

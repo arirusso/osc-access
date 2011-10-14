@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module OSCObject
   
-  class OSCActionScheme
+  class ClassScheme
 
     attr_accessor :send_ip
     attr_reader :accessors, :server
