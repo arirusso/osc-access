@@ -7,10 +7,8 @@ module OSCObject
     attr_reader :accessors, :readers, :server, :writers
     attr_writer :ports
     
-    def initialize(options = {})
+    def initialize
       @ports = { :receive => nil, :send => nil }
-      port = @ports[:receive] || options[:port] || OSCObject::DefaultReceivePort
-      @server = OSC::EMServer.new(port)
       @accessors, @readers, @writers = {}, {}, {}
     end
     
@@ -18,10 +16,10 @@ module OSCObject
       ports = { :receive => nil, :send => nil }
       unless @ports.nil?
         case @ports
-        when Numeric then ports[:receive] = port
-        when Hash then
-          ports[:receive] = @ports[:receive]
-          ports[:send] = @ports[:send]
+          when Numeric then ports[:receive] = port
+          when Hash then
+            ports[:receive] = @ports[:receive]
+            ports[:send] = @ports[:send]
         end
       end
       ports
