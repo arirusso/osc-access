@@ -9,6 +9,7 @@ module OSCObject
     def_delegators :thread, :join, :exit
     
     def initialize(target_obj, scheme, options = {})
+
       ports = scheme.ports
       port = ports[:receive] || options[:receive_port] || DefaultReceivePort
       map = options[:map]
