@@ -7,5 +7,13 @@ require 'test/unit'
 require 'osc-object'
 
 module TestHelper
+  
+  class StubObject
+    
+    include OSCObject::Object
+    
+  end
+  
+  $stub_object = StubObject.new 
      
 end
