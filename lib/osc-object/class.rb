@@ -3,7 +3,10 @@ module OSCObject
 
   module Class
 
-    attr_reader :osc_class_scheme
+    def osc_class_scheme
+      osc_ensure_initialized
+      @osc_class_scheme
+    end
 
     def osc_accessor(*a, &block)
       osc_ensure_initialized
