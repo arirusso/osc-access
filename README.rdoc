@@ -1,8 +1,6 @@
 = OSCAccess
 
-Control Ruby objects with {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control]
-
-OSCAccess enables you to declare classes and objects accessible to OSC.
+OSCAccess provides a simple declarative way to control Ruby objects using {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] messages.
 
 == Requirements
 
@@ -54,14 +52,13 @@ OR by using a Hash map such as:
   
   @map = {
     :pitch => {
-      :type => :accessor,
       :pattern => "/1/fader1", 
       :range => { :remote => 0..1, :local => 0..127 }
     }
   }
 
   @i3 = Instrument.new
-  @i3.osc_to(:host => "192.168.1.5", :port => 9000)
+  @i3.osc_output(:host => "192.168.1.5", :port => 9000)
   @i3.osc_start(:map => map).join
   
 {Here}[blah] is a blog post that explains these examples and more in further depth.
