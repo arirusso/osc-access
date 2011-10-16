@@ -33,8 +33,6 @@ in this script when messages for /1/fader1 are received, the instance variable @
 the OSC value that is received is translated from something between 0 to 1 to the analogous value between 0 and 127
 
 you can also do all of this using instance methods ala:
-
-  require "osc-object"
   
   class Instrument
   
@@ -47,8 +45,6 @@ you can also do all of this using instance methods ala:
   i.osc_join
   
 OR using a Hash map such as:
-
-  require "osc-object"
   
   class Instrument
   
