@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module OSCObject
 
-  module Object
+  module Node
     
     def self.included(base)
       base.extend(Class)
@@ -24,8 +24,8 @@ module OSCObject
     def osc_accessor(attr, options = {}, &block)
       pattern = options[:pattern] || DefaultPattern
       osc_receive(pattern) { |this, msg| on_receive_osc(attr, msg, options, &block) }
-      override = self.respond_to?("#{attr.to_s}=") && options[:get_local] != false
-      osc_override_attr_accessor(attr, pattern, options) if override
+      should_override = self.respond_to?("#{attr.to_s}=") && options[:get_local] != false
+      osc_override_attr_accessor(attr, pattern, options) if should_override
     end
 
     def osc_receive(pattern, &block)
@@ -48,7 +48,9 @@ module OSCObject
 
     def osc_start(options = {})
       scheme = self.class.osc_class_scheme
-      @osc = IO.new(self, scheme, options)
+      ports_from_options = UserPortSpec.new(options[:port])
+      port_spec = ports_from_options || scheme.ports || DefaultPorts
+      @osc = IO.new(self, port_spec, :send_ip => options[:send_ip])
       scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
       #load_hash_map(map) unless map.nil?
       @osc.start
