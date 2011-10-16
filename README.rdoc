@@ -28,7 +28,8 @@ In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s insta
   
   end
 
-  @i = Instrument.new(:join => true)
+  @i = Instrument.new
+  @i.osc_start.join
   
 The <em>:range</em> option means that the received OSC value is translated from a number between 0 to 1 to the analogous value between 0 and 127
 
@@ -40,9 +41,9 @@ You can also do all of this using instance methods ala:
       
   end
 
-  i = Instrument.new
-  i.osc_accessor :pitch, :pattern => "/1/fader1", :range => { :remote => 0..1, :local => 0..127 }
-  i.osc_join
+  @i2 = Instrument.new
+  @i2.osc_accessor :pitch, :pattern => "/1/fader1", :range => { :remote => 0..1, :local => 0..127 }
+  @i2.osc_start.join
   
 OR by using a Hash map such as:
   
@@ -56,7 +57,8 @@ OR by using a Hash map such as:
     }
   }
 
-  i = Instrument.new(:send_ip => "192.168.1.5", :map => map, :join => true)
+  @i3 = Instrument.new
+  @i3.osc_start(:send_ip => "192.168.1.5", :map => map, :join => true)
   
 {Here}[blah] is a blog post that explains these examples and more in further depth.
 

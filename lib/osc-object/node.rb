@@ -7,10 +7,6 @@ module OSCObject
       base.extend(Class)
     end
 
-    def initialize(options = {})
-      osc_start(options)
-    end
-
     def osc_reader(attr, options = {}, &block)
       options[:get_local] = false
       osc_accessor(attr, options, &block)
