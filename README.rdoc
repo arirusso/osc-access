@@ -1,6 +1,6 @@
 = OSCAccess
 
-OSCAccess provides a simple declarative way to control Ruby objects using {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] messages.
+OSCAccess provides a simple way to turn any Ruby object into a multiplexing {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] node
 
 == Requirements
 
@@ -19,10 +19,7 @@ In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s insta
   class Instrument
   
     include OSCAccessible
-    
-    osc_input :port => 8000
-    osc_output :host => "192.168.1.8", :port => 9000
-    
+        
     osc_accessor :pitch, 
                  :pattern => "/1/fader1", 
                  :range => { :remote => 0..1, :local => 0..127 }
@@ -30,7 +27,7 @@ In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s insta
   end
 
   @i = Instrument.new
-  @i.osc_start.join
+  @i.osc_start(:input_port => 8000, :output => { :host => "192.168.1.8", :port => 9000 }).join
   
 The <em>:range</em> option means that the received OSC value is translated from a number between 0 to 1 to the analogous value between 0 and 127
 

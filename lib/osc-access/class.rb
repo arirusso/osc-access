@@ -7,6 +7,11 @@ module OSCAccess
       osc_ensure_initialized
       @osc_class_scheme
     end
+    
+    def osc_receive(pattern, &block)
+      osc_ensure_initialized
+      @osc_class_scheme.add_receiver(pattern, &block)
+    end
 
     def osc_accessor(attr, options = {}, &block)
       osc_ensure_initialized

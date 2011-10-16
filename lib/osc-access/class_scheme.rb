@@ -7,11 +7,16 @@ module OSCAccess
                 :inputs, 
                 :outputs, 
                 :readers, 
+                :receivers,
                 :writers
     
     def initialize
-      @inputs, @outputs = [], []
+      @inputs, @outputs, @receivers = [], [], []
       @accessors, @readers, @writers = {}, {}, {}
+    end
+    
+    def add_receiver(pattern, &block)
+      @receivers << { :pattern => pattern, :block => block }
     end
     
     def add_accessor(attr, options = {}, &block)
