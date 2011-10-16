@@ -2,9 +2,9 @@
 
 require 'helper'
 
-class NodeTest < Test::Unit::TestCase
+class AccessibleTest < Test::Unit::TestCase
 
-  include OSCObject
+  include OSCAccess
   include TestHelper
   
   def test_osc_analog

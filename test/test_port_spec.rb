@@ -4,7 +4,7 @@ require 'helper'
 
 class PortSpecTest < Test::Unit::TestCase
 
-  include OSCObject
+  include OSCAccess
   include TestHelper
   
   def test_hash

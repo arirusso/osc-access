@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-module OSCObject
+module OSCAccess
 
-  module Node
+  module Accessible
     
     def self.included(base)
       base.extend(Class)

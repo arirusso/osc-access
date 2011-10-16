@@ -4,7 +4,7 @@ require 'helper'
 
 class RangeAnalogTest < Test::Unit::TestCase
 
-  include OSCObject
+  include OSCAccess
   include TestHelper
   
   def test_process_amplify

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-require "osc-object"
+require "osc-access"
 
 map = [
   { 
@@ -18,7 +18,7 @@ map = [
   
 class Instrument
   
-  include OSCObject
+  include OSCAccessible
   
   attr_accessor :pitch, :velocity
       

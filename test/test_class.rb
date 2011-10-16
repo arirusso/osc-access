@@ -4,7 +4,7 @@ require 'helper'
 
 class ClassTest < Test::Unit::TestCase
 
-  include OSCObject
+  include OSCAccess
   include TestHelper
   
   def test_osc_class_scheme

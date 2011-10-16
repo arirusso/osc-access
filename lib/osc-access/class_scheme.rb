@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-module OSCObject
+module OSCAccess
   
   class ClassScheme
 

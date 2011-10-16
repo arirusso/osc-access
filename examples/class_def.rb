@@ -1,14 +1,12 @@
 #!/usr/bin/env ruby
 $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
-require "osc-object"
+require "osc-access"
 
 class Instrument
   
-  include OSCObject::Node
+  include OSCAccessible
   
-  osc_port :receive => 8000, :send => 9000
-      
   osc_accessor :pitch, 
                :pattern => "/1/fader1", 
                :range => { :remote => 0..1, :local => 0..127 }
@@ -18,4 +16,5 @@ class Instrument
   
 end
 
-Instrument.new(:join => true)
+i = Instrument.new
+i.osc_start.join

@@ -4,7 +4,7 @@ require 'helper'
 
 class IOTest < Test::Unit::TestCase
 
-  include OSCObject
+  include OSCAccess
   include TestHelper
   
   def test_server_initialized

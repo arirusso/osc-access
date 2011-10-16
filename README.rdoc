@@ -1,4 +1,4 @@
-= osc-object
+= osc-access
 
 Control Ruby objects with {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control]
 
@@ -8,17 +8,17 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
 
 == Installation
 
-  gem install osc-object
+  gem install osc-access
   
 == Usage
 
 In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s instance variable <em>@pitch</em> is set:
 
-  require "osc-object"
+  require "osc-access"
   
   class Instrument
   
-    include OSCAccess
+    include OSCAccessible
     
     osc_to :host => "192.168.1.8", :port => 9000
     
@@ -37,7 +37,7 @@ You can also do all of this using instance methods ala:
   
   class Instrument
   
-    include OSCObject::Node
+    include OSCAccessible
       
   end
 
@@ -47,7 +47,7 @@ You can also do all of this using instance methods ala:
   
 OR by using a Hash map such as:
   
-  class Instrument; include OSCObject::Node; end
+  class Instrument; include OSCAccessible; end
   
   @map = {
     :pitch => {
@@ -65,7 +65,7 @@ OR by using a Hash map such as:
 
 == Other Documentation
 
-* {rdoc}[http://rubydoc.info/github/arirusso/osc-object] 
+* {rdoc}[http://rubydoc.info/github/arirusso/osc-access] 
 
 == License
 
