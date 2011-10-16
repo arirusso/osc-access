@@ -46,11 +46,7 @@ You can also do all of this using instance methods ala:
   
 OR by using a Hash map such as:
   
-  class Instrument
-  
-    include OSCObject::Node
-      
-  end
+  class Instrument; include OSCObject::Node; end
   
   @map = {
     :pitch => {
