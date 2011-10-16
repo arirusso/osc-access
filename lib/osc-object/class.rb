@@ -8,19 +8,19 @@ module OSCObject
       @osc_class_scheme
     end
 
-    def osc_accessor(*a, &block)
+    def osc_accessor(attr, options = {}, &block)
       osc_ensure_initialized
-      @osc_class_scheme.add_accessor(*a, &block) 
+      @osc_class_scheme.add_accessor(attr, options, &block) 
     end
     
     def osc_writer(attr, options = {}, &block)
       osc_ensure_initialized
-      @osc_class_scheme.add_writer(*a, &block)       
+      @osc_class_scheme.add_writer(attr, options, &block)       
     end
     
     def osc_reader(attr, options = {}, &block)
       osc_ensure_initialized
-      @osc_class_scheme.add_reader(*a, &block)       
+      @osc_class_scheme.add_reader(attr, options, &block)       
     end
     
     def osc_send_ip(ip)
