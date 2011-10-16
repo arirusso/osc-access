@@ -58,7 +58,7 @@ OR by using a Hash map such as:
   }
 
   @i3 = Instrument.new
-  @i3.osc_start(:send_ip => "192.168.1.5", :map => map, :join => true)
+  @i3.osc_start(:send_ip => "192.168.1.5", :map => map).join
   
 {Here}[blah] is a blog post that explains these examples and more in further depth.
 
