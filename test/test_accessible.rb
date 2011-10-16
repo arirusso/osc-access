@@ -43,7 +43,8 @@ class AccessibleTest < Test::Unit::TestCase
   #end
     
   def test_class_included
-    
+    o = StubObject.new
+    assert_equal(true, o.class.kind_of?(OSCAccess::Class))
   end
 
   def test_osc_accessor

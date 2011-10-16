@@ -12,6 +12,10 @@ module OSCAccess
       add_client(options[:output][:host], options[:output][:port]) unless options[:output].nil?
     end
     
+    def join
+      @threads.last.join
+    end
+    
     def add_server(port)
       server = self.class.server(port)
       @servers << server

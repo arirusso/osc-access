@@ -39,7 +39,7 @@ module OSCAccess
     #end
 
     def osc_join
-      @osc.thread.join
+      @osc.join
     end
     
     def osc_output(args)
@@ -54,14 +54,10 @@ module OSCAccess
 
     def osc_start(options = {})
       @osc = IO.new
-      self.class.class_scheme.inputs.each { |port| @osc.add_server(port) }
-      self.class.class_scheme.outputs.each { |hash| @osc.add_client(hash) }
-      scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
-      scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
-      scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }
+      osc_initialize_from_class_def
       #load_hash_map(map) unless map.nil?
       @osc.start
-      osc_join if options[:join]
+      osc_join #if options[:join]
       @osc.thread
     end
 
@@ -75,6 +71,14 @@ module OSCAccess
     end
 
     private
+    
+    def osc_initialize_from_class_def
+      self.class.class_scheme.inputs.each { |port| @osc.add_server(port) }
+      self.class.class_scheme.outputs.each { |hash| @osc.add_client(hash) }
+      scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
+      scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
+      scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }      
+    end
     
     def osc_get_local(attr, pattern)
       if respond_to?(attr)
