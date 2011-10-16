@@ -3,18 +3,17 @@ $:.unshift File.join( File.dirname( __FILE__ ), '../lib')
 
 require "osc-access"
 
-map = [
-  { 
-    :pattern => '/1/fader1',
-    :to_range => (0..127),
-    :property => :pitch=
-  },
-  { 
-    :pattern => '/1/fader2',
-    :to_range => (-24..24),
-    :property => :velocity=
+map = {
+  :pitch => {
+    :pattern => "/1/fader1", 
+    :range => { :remote => 0..1, :local => 0..127 }
   }
-]
+  :velocity => {
+    :type => :accessor,
+    :pattern => "/1/fader2",
+    :range => { :local => -24..24 }
+  }
+}
   
 class Instrument
   
@@ -24,4 +23,5 @@ class Instrument
       
 end
 
-Instrument.new(:map => map, :join => true)
+i = Instrument.new
+i.osc_start(:map => map).join

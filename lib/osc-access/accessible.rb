@@ -32,12 +32,6 @@ module OSCAccess
       @osc.transmit(msg)
     end
 
-    #def osc_return(msg, options = {})
-    #  val = osc_get_arg(msg, options)
-    #  return_msg = OSC::Message.new(msg.address, val)
-    #  osc_send(return_msg)
-    #end
-
     def osc_join
       @osc.join
     end
@@ -55,10 +49,14 @@ module OSCAccess
     def osc_start(options = {})
       @osc = IO.new
       osc_initialize_from_class_def
-      #load_hash_map(map) unless map.nil?
+      osc_load_map(options[:map]) unless options[:map].nil?
       @osc.start
       osc_join #if options[:join]
       @osc.thread
+    end
+    
+    def osc_load_map(map)
+      map.each { |attr, mapping| add_map_row(attr, mapping) }      
     end
 
     protected
@@ -128,18 +126,10 @@ module OSCAccess
       respond_to?("#{attr}=") ? send("#{attr}=", val) : instance_variable_set("@#{attr}", val)
     end
 
-    def osc_add_hash_mapping(mapping)
-      osc_range = mapping[:osc_range] || (0..1)
-      @server.add_method(mapping[:pattern]) do | message |
-        raw_value = message.to_a.first
-        computed_value = compute_value(raw_value, osc_range, mapping[:range], :type => mapping[:type])
-        self.send(mapping[:property], computed_value) if self.respond_to?(mapping[:property])
-      end
-    end
-
-    def osc_load_hash_map(map)
-      @map = map
-      @map.each { |mapping| add_hash_mapping(mapping) }
+    def osc_add_map_row(attr, mapping)
+      type = mapping[:type] || :accessor
+      method = "osc_#{type}"
+      self.send(method, attr, mapping)
     end
 
   end
