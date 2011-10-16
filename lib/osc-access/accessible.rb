@@ -21,8 +21,6 @@ module OSCAccess
       osc_initialize
       pattern = options[:pattern] || DefaultPattern
       osc_receive(pattern) { |this, msg| osc_on_receive(attr, msg, options, &block) }
-      should_override = self.respond_to?("#{attr.to_s}=") && options[:get_local] != false
-      osc_override_attr_accessor(attr, pattern, options) if should_override
     end
 
     def osc_receive(pattern, &block)
@@ -33,6 +31,11 @@ module OSCAccess
     def osc_send(msg)
       osc_initialize
       @osc.transmit(msg)
+    end
+    
+    def osc_send_val(pattern, val)
+      msg = OSC::Message.new(pattern, val)
+      osc_send(msg)
     end
 
     def osc_join
@@ -60,8 +63,6 @@ module OSCAccess
       osc_initialize(options)
       osc_initialize_from_class_def
       osc_load_map(options[:map]) unless options[:map].nil?
-      #@osc.start
-      #osc_join #if options[:join]
       @osc.threads.values.last
     end
     
@@ -91,21 +92,8 @@ module OSCAccess
     end
     
     def osc_get_local(attr, pattern)
-      if respond_to?(attr)
-        send(attr)
-      else
-        val = osc_sendinstance_variable_get("@#{attr}")
-        msg = OSC::Message.new(pattern, val)
-        osc_send(msg)
-      end
-    end
-
-    def osc_override_attr_accessor(attr, pattern, options = {})
-      self.class.send(:define_method, "#{attr}=") do |val|
-        msg = OSC::Message.new(pattern, val)
-        osc_send(msg)
-        super
-      end
+      val = instance_variable_get("@#{attr.to_s}")
+      osc_send_val(pattern, val)
     end
 
     def osc_get_arg(msg, options = {})

@@ -61,12 +61,12 @@ class IOTest < Test::Unit::TestCase
     received = nil
     io = IO.new(:input_port => 9015, :output => { :port => 4000, :host => "localhost" })
     @server = OSC::EMServer.new(4000)
-    @server.add_method("/greeting") do |message|
+    @server.add_method("/test_transmit") do |message|
       received = message.args[0]
     end 
     Thread.new { @server.run }
     sleep(0.5)
-    io.transmit(OSC::Message.new( "/greeting" , "hullo from io/transmit!" ))
+    io.transmit(OSC::Message.new( "/test_transmit" , "hullo from io/transmit!" ))
     sleep(0.5)
     assert_equal("hullo from io/transmit!", received)
   end
@@ -74,11 +74,11 @@ class IOTest < Test::Unit::TestCase
   def test_receive
     received = nil
     io = IO.new(:input_port => 3339)
-    io.receive(io, "/greeting") do |obj, message|
+    io.receive(io, "/test_receive") do |obj, message|
       received = message.args[0]
     end
     client = OSC::Client.new( 'localhost', 3339 )
-    client.send( OSC::Message.new( "/greeting" , "hullo from io/receive!" ))
+    client.send( OSC::Message.new( "/test_receive" , "hullo from io/receive!" ))
     sleep(0.5)    
     assert_equal("hullo from io/receive!", received)
   end
