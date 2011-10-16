@@ -2,7 +2,6 @@
 module OSCObject
   
   DefaultPattern = /.*/
-  DefaultReceivePort = 8000
-  DefaultSendPort = 9000
+  DefaultPorts = { :receive => 8000, :transmit => 9000 }
 
 end
