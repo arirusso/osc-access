@@ -22,6 +22,14 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal(0.10, outp)     
   end
   
+  def test_osc_output
+    
+  end
+  
+  def test_osc_input
+    
+  end
+  
   def test_change_receive_port
     
   end

@@ -5,9 +5,11 @@ module OSCAccess
     
     attr_reader :clients, :servers, :threads
     
-    def initialize
+    def initialize(options = {})
       @clients, @servers = [], []
       @threads = {}
+      add_server(options[:input_port]) unless options[:input_port].nil?
+      add_client(options[:output][:host], options[:output][:port]) unless options[:output].nil?
     end
     
     def add_server(port)
