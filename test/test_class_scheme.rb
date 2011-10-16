@@ -52,9 +52,9 @@ class ClassSchemeTest < Test::Unit::TestCase
   
   def test_send_ip
     scheme = ClassScheme.new
-    assert_nil(scheme.send_ip)
-    scheme.send_ip = "192.168.1.8"
-    assert_equal("192.168.1.8", scheme.send_ip)      
+    assert_nil(scheme.remote_host)
+    scheme.remote_host = "192.168.1.8"
+    assert_equal("192.168.1.8", scheme.remote_host)      
   end
   
 end

@@ -10,7 +10,7 @@ module OSCObject
     
     def initialize(target_obj, port_spec, options = {})
       @server = self.class.server(port_spec.receive)
-      @client = self.class.client(options[:send_ip], port_spec.transmit) unless options[:send_ip].nil?
+      @client = self.class.client(options[:remote_host], port_spec.transmit) unless options[:remote_host].nil?
     end
     
     def transmit(*a)
@@ -34,11 +34,11 @@ module OSCObject
       @servers[port]
     end
     
-    def self.client(ip, port)
+    def self.client(host, port)
       @clients ||= {}
-      @clients[ip] ||= {}
-      @clients[ip][port] ||= OSC::Client.new(ip, port)
-      @clients[ip][port]
+      @clients[host] ||= {}
+      @clients[host][port] ||= OSC::Client.new(host, port)
+      @clients[host][port]
     end
 
   end

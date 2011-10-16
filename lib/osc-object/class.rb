@@ -23,9 +23,9 @@ module OSCObject
       @osc_class_scheme.add_reader(attr, options, &block)       
     end
     
-    def osc_send_ip(ip)
+    def osc_remote_host(host)
       osc_ensure_initialized
-      @osc_class_scheme.send_ip = ip
+      @osc_class_scheme.remote_host = host
     end
     
     def osc_port(val)

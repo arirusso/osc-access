@@ -3,12 +3,12 @@ module OSCObject
   
   class ClassScheme
 
-    attr_accessor :send_ip
+    attr_accessor :remote_host
     attr_reader :accessors, :readers, :writers
     attr_writer :ports
     
     def initialize
-      @ports = { :receive => nil, :send => nil }
+      @ports = { :receive => nil, :transmit => nil }
       @accessors, @readers, @writers = {}, {}, {}
     end
     

@@ -39,8 +39,8 @@ class ClassTest < Test::Unit::TestCase
   def test_send_ip
     obj = $stub_object
     ip = "192.143.100.1"
-    obj.class.osc_send_ip(ip)
-    assert_equal(ip, obj.class.osc_class_scheme.send_ip)
+    obj.class.osc_remote_host(ip)
+    assert_equal(ip, obj.class.osc_class_scheme.remote_host)
   end
   
   def test_osc_port

@@ -46,7 +46,7 @@ module OSCObject
       scheme = self.class.osc_class_scheme
       ports_from_options = PortSpec.new(options[:port])
       port_spec = ports_from_options || scheme.ports || DefaultPorts
-      @osc = IO.new(self, port_spec, :send_ip => options[:send_ip])
+      @osc = IO.new(self, port_spec, :remote_host => options[:remote_host])
       scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
       #load_hash_map(map) unless map.nil?
       @osc.start
