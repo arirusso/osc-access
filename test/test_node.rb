@@ -22,6 +22,18 @@ class NodeTest < Test::Unit::TestCase
     assert_equal(0.10, outp)     
   end
   
+  def test_change_receive_port
+    
+  end
+  
+  def test_change_transmit_port
+    
+  end
+
+  def test_change_transmit_ip
+    
+  end
+    
   def test_class_included
   
   end

@@ -5,12 +5,12 @@ module OSCObject
     
     extend Forwardable
     
-    attr_reader :thread
+    attr_reader :client, :server, :thread
     def_delegators :thread, :join, :exit
     
     def initialize(target_obj, port_spec, options = {})
       @server = self.class.server(port_spec.receive)
-      @client = self.class.client(options[:send_ip], ports_spec.transmit) unless options[:send_ip].nil?
+      @client = self.class.client(options[:send_ip], port_spec.transmit) unless options[:send_ip].nil?
     end
     
     def transmit(*a)
