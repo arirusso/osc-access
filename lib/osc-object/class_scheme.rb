@@ -4,7 +4,7 @@ module OSCObject
   class ClassScheme
 
     attr_accessor :send_ip
-    attr_reader :accessors, :readers, :server, :writers
+    attr_reader :accessors, :readers, :writers
     attr_writer :ports
     
     def initialize
@@ -13,16 +13,7 @@ module OSCObject
     end
     
     def ports
-      ports = { :receive => nil, :send => nil }
-      unless @ports.nil?
-        case @ports
-          when Numeric then ports[:receive] = port
-          when Hash then
-            ports[:receive] = @ports[:receive]
-            ports[:send] = @ports[:send]
-        end
-      end
-      ports
+      UserPortSpec.new(@ports)
     end
     
     def add_accessor(attr, options = {}, &block)
