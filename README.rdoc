@@ -2,7 +2,7 @@
 
 OSCAccess provides a simple way to turn a Ruby object into a multiplexing {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] node
 
-Declaratively bind an object's instance variables and methods to OSC events.  Declaration can be done during class definition, by calling instance methods, or by passing in a Hash map.
+Declaratively bind an object's methods or instance variables to OSC events.  Declaration can be done during class definition, by calling instance methods, or by passing in a Hash map.
 
 == Requirements
 
@@ -14,53 +14,27 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
   
 == Usage
 
-In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s instance variable <em>@pitch</em> is set:
+In this script, when OSC messages for <em>/1/fader1</em> are received, <em>velocity=</em> will be called 
 
-  require "osc-access"
+class Instrument
   
-  class Instrument
-  
-    include OSCAccessible
-        
-    osc_accessor :pitch, 
-                 :pattern => "/1/fader1", 
-                 :range => { :remote => 0..1, :local => 0..127 }
-  
+  include OSCAccessible
+
+  osc_receive "/1/fader1" do |instance, msg|
+    val = instance.osc_translate(msg.args.first, :local => 0..127, :remote => 0..1 )
+    instance.velocity = val
   end
-
-  @i = Instrument.new
-  @i.osc_start(:input_port => 8000, :output => { :host => "192.168.1.8", :port => 9000 }).join
   
-The <em>:range</em> option means that the received OSC value is translated from a number between 0 to 1 to the analogous value between 0 and 127
-
-You can also do all of this using instance methods ala:
-  
-  class Instrument
-  
-    include OSCAccessible
-      
+  def velocity=(val)
+    puts "fader1 has value #{val}"
   end
+  
+end
 
-  @i2 = Instrument.new
-  @i2.osc_accessor :pitch, :pattern => "/1/fader1", :range => { :remote => 0..1, :local => 0..127 }
-  @i2.osc_start.join
-  
-OR by using a Hash map such as:
-  
-  class Instrument; include OSCAccessible; end
-  
-  @map = {
-    :pitch => {
-      :pattern => "/1/fader1", 
-      :range => { :remote => 0..1, :local => 0..127 }
-    }
-  }
+i = Instrument.new
+i.osc_start(:input_port => 8000).join  
 
-  @i3 = Instrument.new
-  @i3.osc_output(:host => "192.168.1.5", :port => 9000)
-  @i3.osc_start(:map => map).join
-  
-{Here}[blah] is a blog post that explains these examples and more in further depth.
+The <em>osc_translate</em> method in this case takes the first OSC argument and translates it from a number between 0 to 1 to the analogous value between 0 and 127
 
 == Other Documentation
 

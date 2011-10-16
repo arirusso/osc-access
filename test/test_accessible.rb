@@ -55,10 +55,6 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal(true, o.class.kind_of?(OSCAccess::Class))
   end
 
-  def test_osc_accessor
-    
-  end
-
   def test_osc_receive
     
   end
@@ -75,10 +71,6 @@ class AccessibleTest < Test::Unit::TestCase
     
   end
 
-  def test_override_attr_accessor
-    
-  end
-  
   def test_get_arg
     
   end

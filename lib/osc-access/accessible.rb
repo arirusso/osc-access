@@ -40,9 +40,10 @@ module OSCAccess
     
     def osc_start(options = {})
       osc_initialize(options)
+      @osc.initialize_node(options)
       osc_initialize_from_class_def
       osc_load_map(options[:map]) unless options[:map].nil?
-      @osc.threads.values.last
+      @osc.threads.values.last || Thread.new { loop {} }
     end
     
     def osc_load_map(map)
@@ -50,7 +51,7 @@ module OSCAccess
       map.each { |attr, mapping| add_map_row(attr, mapping) }      
     end
     
-    def osc_analog(value, range)
+    def osc_translate(value, range)
       new_vals = [value].flatten.map do |single_value|
         if range.kind_of?(Range)
           remote = 0..1
