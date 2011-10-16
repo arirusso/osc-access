@@ -2,7 +2,7 @@
 
 OSCAccess provides a simple way to turn a Ruby object into a multiplexing {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] node
 
-Declaratively bind an object's instance variables and methods to OSC events.  Declaration can be done in the class definition, by calling instance methods, or by passing in a Hash map.
+Declaratively bind an object's instance variables and methods to OSC events.  Declaration can be done during class definition, by calling instance methods, or by passing in a Hash map.
 
 == Requirements
 

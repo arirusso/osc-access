@@ -7,22 +7,6 @@ module OSCAccess
       base.extend(Class)
     end
 
-    def osc_reader(attr, options = {}, &block)
-      options[:set_local] = false
-      osc_accessor(attr, options, &block)
-    end
-
-    def osc_writer(attr, options = {}, &block)
-      options[:get_local] = false
-      osc_accessor(attr, options, &block)
-    end
-
-    def osc_accessor(attr, options = {}, &block)
-      osc_initialize
-      pattern = options[:pattern] || DefaultPattern
-      osc_receive(pattern) { |this, msg| osc_on_receive(attr, msg, options, &block) }
-    end
-
     def osc_receive(pattern, &block)
       osc_initialize
       @osc.receive(self, pattern, &block)
@@ -54,10 +38,6 @@ module OSCAccess
       @osc.add_server(port)
     end
     
-    def osc_initialize(options = {})
-      @osc ||= IO.new(options)
-    end
-
     def osc_start(options = {})
       osc_initialize(options)
       osc_initialize_from_class_def
@@ -96,7 +76,27 @@ module OSCAccess
     end
 
     private
+
+    def osc_initialize(options = {})
+      @osc ||= IO.new(options)
+    end
     
+    def osc_reader(attr, options = {}, &block)
+      options[:set_local] = false
+      osc_accessor(attr, options, &block)
+    end
+
+    def osc_writer(attr, options = {}, &block)
+      options[:get_local] = false
+      osc_accessor(attr, options, &block)
+    end
+
+    def osc_accessor(attr, options = {}, &block)
+      osc_initialize
+      pattern = options[:pattern] || DefaultPattern
+      osc_receive(pattern) { |this, msg| osc_on_receive(attr, msg, options, &block) }
+    end
+        
     def osc_initialize_from_class_def
       scheme = self.class.osc_class_scheme
       scheme.inputs.each { |port| @osc.add_server(port) }
