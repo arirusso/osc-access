@@ -41,12 +41,21 @@ module OSCAccess
     def osc_join
       @osc.thread.join
     end
+    
+    def osc_output(args)
+      
+    end
+    
+    def osc_input_port(port)
+      
+    end
 
     def osc_start(options = {})
       scheme = self.class.osc_class_scheme
       ports_from_options = PortSpec.new(options[:port])
       port_spec = ports_from_options || scheme.ports || DefaultPorts
-      @osc = IO.new(self, port_spec, :remote_host => options[:remote_host])
+      @osc = IO.new
+      #(self, port_spec, :remote_host => options[:remote_host])
       scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
       #load_hash_map(map) unless map.nil?
       @osc.start

@@ -3,17 +3,15 @@ module OSCAccess
   
   class ClassScheme
 
-    attr_accessor :remote_host
-    attr_reader :accessors, :readers, :writers
-    attr_writer :ports
+    attr_reader :accessors, 
+                :input_ports, 
+                :outputs, 
+                :readers, 
+                :writers
     
     def initialize
-      @ports = { :receive => nil, :transmit => nil }
+      @input_ports, @outputs = [], []
       @accessors, @readers, @writers = {}, {}, {}
-    end
-    
-    def ports
-      PortSpec.new(@ports)
     end
     
     def add_accessor(attr, options = {}, &block)

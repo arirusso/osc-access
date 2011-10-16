@@ -23,14 +23,14 @@ module OSCAccess
       @osc_class_scheme.add_reader(attr, options, &block)       
     end
     
-    def osc_remote_host(host)
+    def osc_output(args)
       osc_ensure_initialized
-      @osc_class_scheme.remote_host = host
+      @osc_class_scheme.outputs << args
     end
     
-    def osc_port(val)
+    def osc_input_port(val)
       osc_ensure_initialized
-      @osc_class_scheme.ports = val
+      @osc_class_scheme.input_ports << val
     end
     
     private

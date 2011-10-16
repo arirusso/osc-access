@@ -3,31 +3,36 @@ module OSCAccess
   
   class IO
     
-    extend Forwardable
+    attr_reader :clients, :servers, :threads
     
-    attr_reader :client, :server, :thread
-    def_delegators :thread, :join, :exit
+    def initialize
+      @clients, @servers = [], []
+      @threads = {}
+    end
     
-    def initialize(target_obj, port_spec, options = {})
-      @server = self.class.server(port_spec.receive)
-      @client = self.class.client(options[:remote_host], port_spec.transmit) unless options[:remote_host].nil?
+    def add_server(port)
+      server = self.class.server(port)
+      @servers << server
+      @threads[server] = Thread.new do
+        Thread.abort_on_exception = true
+        server.run
+      end      
+    end
+    
+    def add_client(host, port)
+      @clients << self.class.client(host, port)
     end
     
     def transmit(*a)
-      @client.send(*a) unless @client.nil?
+      @clients.each { |c| c.send(*a) }
     end
 
     def receive(target_obj, pattern, &block)
-      @server.add_method(pattern) { |message| yield(target_obj, message) }
-    end
-
-    def start
-      @thread = Thread.new do
-        Thread.abort_on_exception = true
-        @server.run
+      @servers.each do |server|
+        server.add_method(pattern) { |message| yield(target_obj, message) }
       end
     end
-    
+
     def self.server(port)
       @servers ||= {}
       @servers[port] ||= OSC::EMServer.new(port) 

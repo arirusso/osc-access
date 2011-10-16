@@ -6,8 +6,6 @@
 # 
 
 # libs
-require "forwardable"
-
 require "osc-ruby"
 require "osc-ruby/em_server"
 
@@ -19,7 +17,6 @@ require "osc-access/class"
 require "osc-access/class_scheme"
 require "osc-access/io"
 require "osc-access/message"
-require "osc-access/port_spec"
 require "osc-access/range_analog"
 
 # other
