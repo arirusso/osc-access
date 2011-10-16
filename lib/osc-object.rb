@@ -13,7 +13,6 @@ require "osc-ruby/em_server"
 
 # modules
 require "osc-object/class"
-require "osc-object/default"
 require "osc-object/node"
 
 # classes
@@ -22,6 +21,9 @@ require "osc-object/io"
 require "osc-object/message"
 require "osc-object/port_spec"
 require "osc-object/range_analog"
+
+# other
+require "osc-object/default"
 
 module OSCObject
   

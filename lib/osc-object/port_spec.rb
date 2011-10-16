@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 module OSCObject
   
-  class UserPortSpec
+  class PortSpec
     
     attr_reader :receive, :transmit
     
