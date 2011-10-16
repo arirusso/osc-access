@@ -89,7 +89,7 @@ module OSCObject
           local = range
           type = nil
         else
-          remote = range[:remote] || (0..1)
+          remote = range[:remote] || DefaultRemoteRange
           local = range[:local]
           type = range[:type]
         end

@@ -5,7 +5,7 @@ require "osc-object"
 
 class Instrument
   
-  include OSCObject
+  include OSCObject::Node
   
   osc_port :receive => 8000, :send => 9000
       
