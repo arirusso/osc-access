@@ -6,7 +6,7 @@ module OSCAccess
     attr_reader :clients, :servers, :threads
     
     def initialize(options = {})
-      @clients, @servers = [], []
+      @clients, @receivers, @servers = [], [], []
       @threads = {}
       add_server(options[:input_port]) unless options[:input_port].nil?
       add_client(options[:output][:host], options[:output][:port]) unless options[:output].nil? 
@@ -19,6 +19,11 @@ module OSCAccess
     def add_server(port)
       server = self.class.server(port)
       @servers << server
+      @receivers.each do |receiver| 
+        server.add_method(receiver[:pattern]) do |message| 
+          receiver[:block].call(receiver[:target_obj], message)
+        end
+      end
       @threads[server] = Thread.new do
         Thread.abort_on_exception = true
         server.run
@@ -37,6 +42,7 @@ module OSCAccess
       @servers.each do |server|
         server.add_method(pattern) { |message| yield(target_obj, message) }
       end
+      @receivers << { :target_obj => target_obj, :pattern => pattern, :block => block }
     end
 
     def self.server(port)
