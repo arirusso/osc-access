@@ -43,7 +43,8 @@ module OSCAccess
     end
     
     def osc_output(args)
-      @osc.add_client(args[:host], args[:port])
+      port = args[:port] || DefaultOutputPort
+      @osc.add_client(args[:host], port)
     end
     
     def osc_input(arg)
@@ -52,12 +53,12 @@ module OSCAccess
     end
 
     def osc_start(options = {})
-      scheme = self.class.osc_class_scheme
-      ports_from_options = PortSpec.new(options[:port])
-      port_spec = ports_from_options || scheme.ports || DefaultPorts
       @osc = IO.new
-      #(self, port_spec, :remote_host => options[:remote_host])
+      self.class.class_scheme.inputs.each { |port| @osc.add_server(port) }
+      self.class.class_scheme.outputs.each { |hash| @osc.add_client(hash) }
       scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
+      scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
+      scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }
       #load_hash_map(map) unless map.nil?
       @osc.start
       osc_join if options[:join]
