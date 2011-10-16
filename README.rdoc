@@ -1,6 +1,8 @@
-= osc-access
+= OSCAccess
 
 Control Ruby objects with {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control]
+
+OSCAccess enables you to declare classes and objects accessible to OSC.
 
 == Requirements
 

@@ -58,7 +58,7 @@ class AccessibleTest < Test::Unit::TestCase
     
   end
   
-  def test_osc_return
+  def test_osc_send_attr
     
   end
 

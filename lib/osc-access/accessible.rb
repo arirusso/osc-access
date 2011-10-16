@@ -32,11 +32,11 @@ module OSCAccess
       @osc.transmit(msg)
     end
 
-    def osc_return(msg, options = {})
-      val = osc_get_arg(msg, options)
-      return_msg = OSC::Message.new(msg.address, val)
-      osc_send(return_msg)
-    end
+    #def osc_return(msg, options = {})
+    #  val = osc_get_arg(msg, options)
+    #  return_msg = OSC::Message.new(msg.address, val)
+    #  osc_send(return_msg)
+    #end
 
     def osc_join
       @osc.thread.join
@@ -57,12 +57,23 @@ module OSCAccess
     protected
 
     def osc_on_receive(attr, msg, options = {}, &block)
-      osc_set_local_value(attr, msg, options) unless options[:set_local] == false
-      osc_return(msg, options) unless options[:get_local] == false
+      is_get = msg.to_a.empty?
+      osc_set_local(attr, msg, options) unless options[:set_local] == false || is_get
+      osc_get_local(attr, msg.address)  unless options[:get_local] == false
       yield(self, val) unless block.nil?
     end
 
     private
+    
+    def osc_get_local(attr, pattern)
+      if respond_to?(attr)
+        send(attr)
+      else
+        val = osc_sendinstance_variable_get("@#{attr}")
+        msg = OSC::Message.new(pattern, val)
+        osc_send(msg)
+      end
+    end
 
     def osc_override_attr_accessor(attr, pattern, options = {})
       self.class.send(:define_method, "#{attr}=") do |val|
@@ -94,12 +105,12 @@ module OSCAccess
       value.kind_of?(Array) ? new_vals : new_vals.first
     end
 
-    def osc_set_local_value(attr, msg, options = {})
+    def osc_set_local(attr, msg, options = {})
       val = osc_get_arg(msg, options)
       use_range = !options[:range].nil?
       val = osc_analog(val, options[:range]) if use_range
       p val
-      instance_variable_set("@#{attr}", val)
+      respond_to?("#{attr}=") ? send("#{attr}=", val) : instance_variable_set("@#{attr}", val)
     end
 
     def osc_add_hash_mapping(mapping)
