@@ -13,7 +13,7 @@ module OSCObject
     end
     
     def ports
-      UserPortSpec.new(@ports)
+      PortSpec.new(@ports)
     end
     
     def add_accessor(attr, options = {}, &block)

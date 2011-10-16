@@ -20,8 +20,8 @@ require "osc-object/node"
 require "osc-object/class_scheme"
 require "osc-object/io"
 require "osc-object/message"
+require "osc-object/port_spec"
 require "osc-object/range_analog"
-require "osc-object/user_port_spec"
 
 module OSCObject
   

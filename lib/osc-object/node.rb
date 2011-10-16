@@ -44,7 +44,7 @@ module OSCObject
 
     def osc_start(options = {})
       scheme = self.class.osc_class_scheme
-      ports_from_options = UserPortSpec.new(options[:port])
+      ports_from_options = PortSpec.new(options[:port])
       port_spec = ports_from_options || scheme.ports || DefaultPorts
       @osc = IO.new(self, port_spec, :send_ip => options[:send_ip])
       scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
