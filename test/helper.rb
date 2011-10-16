@@ -12,8 +12,8 @@ module TestHelper
     
     include OSCAccessible
     
+    attr_accessor :data
+    
   end
-  
-  $stub_object = StubObject.new 
-     
+
 end

@@ -8,17 +8,17 @@ class AccessibleTest < Test::Unit::TestCase
   include TestHelper
   
   def test_osc_analog
-    outp = $stub_object.send(:osc_analog, 0.8, :local => 0..127, :remote => 0..1)
+    outp = StubObject.new.send(:osc_analog, 0.8, :local => 0..127, :remote => 0..1)
     assert_equal(101, outp)      
   end
   
   def test_osc_analog_default_remote
-    outp = $stub_object.send(:osc_analog, 0.5, 0..127)
+    outp = StubObject.new.send(:osc_analog, 0.5, 0..127)
     assert_equal(63, outp)      
   end
   
   def test_osc_analog_float
-    outp = $stub_object.send(:osc_analog, 12, :remote => 0..120, :local => 0..1, :type => :float)
+    outp = StubObject.new.send(:osc_analog, 12, :remote => 0..120, :local => 0..1, :type => :float)
     assert_equal(0.10, outp)     
   end
   
@@ -41,6 +41,14 @@ class AccessibleTest < Test::Unit::TestCase
   #def test_change_transmit_ip
   #  
   #end
+  
+  def test_load_map
+    
+  end
+  
+  def test_add_map_row
+    
+  end
     
   def test_class_included
     o = StubObject.new
@@ -56,7 +64,15 @@ class AccessibleTest < Test::Unit::TestCase
   end
   
   def test_osc_writer
-    
+    obj = StubObject.new
+    obj.osc_start(:input_port => 9050)
+    obj.osc_writer(:data, :pattern => "/greeting")
+    #obj.osc_start
+    sleep(0.5)    
+    client = OSC::Client.new( 'localhost', 9050 )
+    client.send( OSC::Message.new( "/greeting" , "hullo from osc_writer!" ))
+    sleep(0.5)
+    assert_equal("hullo from osc_writer!", obj.data)    
   end
 
   def test_osc_receive

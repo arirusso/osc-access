@@ -8,12 +8,16 @@ module OSCAccess
     def initialize(options = {})
       @clients, @servers = [], []
       @threads = {}
-      add_server(options[:input_port]) unless options[:input_port].nil?
-      add_client(options[:output][:host], options[:output][:port]) unless options[:output].nil?
+      input_port = options[:input_port] || DefaultInputPort
+      add_server(input_port) 
+      unless options[:output].nil?
+        output_port = options[:output][:port] || DefaultOutputPort
+        add_client(options[:output][:host], output_port) 
+      end
     end
     
     def join
-      @threads.last.join
+      @threads.values.last.join
     end
     
     def add_server(port)
