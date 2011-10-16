@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class OSCObjectTest < Test::Unit::TestCase
+class ObjectTest < Test::Unit::TestCase
 
   include OSCObject
   include TestHelper

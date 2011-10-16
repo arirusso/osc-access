@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class OSCServerTest < Test::Unit::TestCase
+class RangeAnalogTest < Test::Unit::TestCase
 
   include OSCObject
   include TestHelper

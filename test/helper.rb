@@ -10,7 +10,7 @@ module TestHelper
   
   class StubObject
     
-    include OSCObject::Object
+    include OSCObject::Node
     
   end
   
