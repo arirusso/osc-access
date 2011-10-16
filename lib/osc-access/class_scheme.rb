@@ -4,13 +4,13 @@ module OSCAccess
   class ClassScheme
 
     attr_reader :accessors, 
-                :input_ports, 
+                :inputs, 
                 :outputs, 
                 :readers, 
                 :writers
     
     def initialize
-      @input_ports, @outputs = [], []
+      @inputs, @outputs = [], []
       @accessors, @readers, @writers = {}, {}, {}
     end
     

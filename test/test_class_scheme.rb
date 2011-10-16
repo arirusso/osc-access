@@ -36,25 +36,24 @@ class ClassSchemeTest < Test::Unit::TestCase
   
   def test_ports
     scheme = ClassScheme.new
-    scheme.ports = { :receive => 8001, :send => 9001 }
-    ports = scheme.ports
-    assert_equal(8001, ports.receive)
-    assert_equal(9001, ports.transmit)       
+    scheme.outputs << { :host => "1.1.1.1", :port => 8001 }
+    scheme.inputs << 9001
+    assert_equal(8001, scheme.outputs.first[:port])
+    assert_equal(9001, scheme.inputs.first)       
   end
   
   def test_ports_receive_only
     scheme = ClassScheme.new
-    scheme.ports = 8005
-    ports = scheme.ports
-    assert_equal(8005, ports.receive)
-    assert_nil(ports.transmit)       
+    scheme.inputs << 8005
+    assert_equal(8005, scheme.inputs.first)
+    assert_nil(scheme.outputs.first)       
   end
   
   def test_send_ip
     scheme = ClassScheme.new
-    assert_nil(scheme.remote_host)
-    scheme.remote_host = "192.168.1.8"
-    assert_equal("192.168.1.8", scheme.remote_host)      
+    assert_nil(scheme.outputs.first)
+    scheme.outputs << { :host => "192.168.1.8" }
+    assert_equal("192.168.1.8", scheme.outputs.first[:host])      
   end
   
 end

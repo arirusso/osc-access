@@ -8,12 +8,12 @@ class ClassTest < Test::Unit::TestCase
   include TestHelper
   
   def test_osc_class_scheme
-    obj = $stub_object
+    obj = StubObject.new
     assert_not_nil(obj.class.osc_class_scheme)
   end
   
   def test_osc_accessor(*a, &block)
-    obj = $stub_object
+    obj = StubObject.new
     options = { :pattern => /.*/ }
     obj.class.osc_accessor(:whatever, options)
     assert_equal(1, obj.class.osc_class_scheme.accessors.size)
@@ -21,7 +21,7 @@ class ClassTest < Test::Unit::TestCase
   end
     
   def test_osc_writer(*a, &block)
-    obj = $stub_object
+    obj = StubObject.new
     options = { :pattern => /.*/ }
     obj.class.osc_writer(:whatever, options)
     assert_equal(1, obj.class.osc_class_scheme.writers.size)
@@ -29,34 +29,39 @@ class ClassTest < Test::Unit::TestCase
   end
   
   def test_osc_reader(*a, &block)
-    obj = $stub_object
+    obj = StubObject.new
     options = { :pattern => /.*/ }
     obj.class.osc_reader(:whatever, options)
     assert_equal(1, obj.class.osc_class_scheme.readers.size)
     assert_equal(options, obj.class.osc_class_scheme.readers[:whatever][:options])
   end
   
-  def test_send_ip
-    obj = $stub_object
+  def test_output_default_port
+    obj = StubObject.new
     ip = "192.143.100.1"
-    obj.class.osc_remote_host(ip)
-    assert_equal(ip, obj.class.osc_class_scheme.remote_host)
+    obj.class.osc_output(:host => ip)
+    assert_equal(ip, obj.class.osc_class_scheme.outputs.last[:host])
   end
   
-  def test_osc_port
-    obj = $stub_object
-    ports = { :receive => 8002, :send => 9002 }
-    obj.class.osc_port(ports)
-    assert_equal(8002, obj.class.osc_class_scheme.ports.receive)   
-    assert_equal(9002, obj.class.osc_class_scheme.ports.transmit)   
+  def test_osc_input_and_output
+    obj = StubObject.new
+    obj.class.osc_input(8011)
+    obj.class.osc_output(:host => "1.1.1.1", :port => 9012)
+    assert_equal(8011, obj.class.osc_class_scheme.inputs.last)   
+    assert_equal(9012, obj.class.osc_class_scheme.outputs.last[:port])   
   end
   
-  def test_osc_port_receive_only
-    obj = $stub_object
-    port = 8003
-    obj.class.osc_port(port)
-    assert_equal(port, obj.class.osc_class_scheme.ports.receive) 
-    assert_nil(obj.class.osc_class_scheme.ports.transmit)      
+  def test_osc_input
+    obj = StubObject.new
+    obj.class.osc_input(8013)
+    assert_equal(8013, obj.class.osc_class_scheme.inputs.first) 
+    assert_nil(obj.class.osc_class_scheme.outputs.first)      
   end
 
+  def test_osc_input_hash
+    obj = StubObject.new
+    obj.class.osc_input(:port => 8014)
+    assert_equal({ :port => 8014 }, obj.class.osc_class_scheme.inputs.last)     
+  end
+  
 end

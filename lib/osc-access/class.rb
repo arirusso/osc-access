@@ -28,9 +28,9 @@ module OSCAccess
       @osc_class_scheme.outputs << args
     end
     
-    def osc_input_port(val)
+    def osc_input(val)
       osc_ensure_initialized
-      @osc_class_scheme.input_ports << val
+      @osc_class_scheme.inputs << val
     end
     
     private

@@ -30,20 +30,20 @@ class AccessibleTest < Test::Unit::TestCase
     
   end
   
-  def test_change_receive_port
-    
-  end
+  #def test_change_receive_port
+  #  
+  #end
   
-  def test_change_transmit_port
-    
-  end
+  #def test_change_transmit_port
+  #  
+  #end
 
-  def test_change_transmit_ip
-    
-  end
+  #def test_change_transmit_ip
+  #  
+  #end
     
   def test_class_included
-  
+    
   end
 
   def test_osc_accessor
