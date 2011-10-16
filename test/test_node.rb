@@ -22,4 +22,48 @@ class NodeTest < Test::Unit::TestCase
     assert_equal(0.10, outp)     
   end
   
+  def test_class_included
+  
+  end
+
+  def test_osc_accessor
+    
+  end
+  
+  def test_osc_reader
+    
+  end
+  
+  def test_osc_writer
+    
+  end
+
+  def test_osc_receive
+    
+  end
+  
+  def test_osc_send
+    
+  end
+  
+  def test_osc_return
+    
+  end
+
+  def test_osc_start
+    
+  end
+
+  def test_override_attr_accessor
+    
+  end
+  
+  def test_get_arg
+    
+  end
+
+  def test_set_local_value
+    
+  end
+  
 end
