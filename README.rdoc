@@ -1,6 +1,6 @@
 = osc-object
 
-Control Ruby objects with OSC
+Control Ruby objects with {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control]
 
 == Requirements
 
@@ -12,7 +12,7 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
   
 == Usage
 
-In this script when messages for /1/fader1 are received, <em>@i</em>'s instance variable <em>@pitch</em> is set:
+In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s instance variable <em>@pitch</em> is set:
 
   require "osc-object"
   
