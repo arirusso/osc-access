@@ -18,9 +18,9 @@ In this script when OSC messages for /1/fader1 are received, <em>@i</em>'s insta
   
   class Instrument
   
-    include OSCObject::Node
+    include OSCAccess
     
-    osc_send_ip "192.168.1.8"
+    osc_to :host => "192.168.1.8", :port => 9000
     
     osc_accessor :pitch, 
                  :pattern => "/1/fader1", 
@@ -58,7 +58,8 @@ OR by using a Hash map such as:
   }
 
   @i3 = Instrument.new
-  @i3.osc_start(:send_ip => "192.168.1.5", :map => map).join
+  @i3.osc_to(:host => "192.168.1.5", :port => 9000)
+  @i3.osc_start(:map => map).join
   
 {Here}[blah] is a blog post that explains these examples and more in further depth.
 
