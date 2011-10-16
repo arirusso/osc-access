@@ -12,6 +12,8 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
   
 == Usage
 
+In this script when messages for /1/fader1 are received, the @i's instance variable @pitch is set:
+
   require "osc-object"
   
   class Instrument
@@ -26,13 +28,11 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
   
   end
 
-  Instrument.new(:join => true)
+  @i = Instrument.new(:join => true)
   
-in this script when messages for /1/fader1 are received, the instance variable @pitch is set
+The :range option means that the received OSC value is translated from a number between 0 to 1 to the analogous value between 0 and 127
 
-the OSC value that is received is translated from something between 0 to 1 to the analogous value between 0 and 127
-
-you can also do all of this using instance methods ala:
+You can also do all of this using instance methods ala:
   
   class Instrument
   
@@ -44,7 +44,7 @@ you can also do all of this using instance methods ala:
   i.osc_accessor :pitch, :pattern => "/1/fader1", :range => { :remote => 0..1, :local => 0..127 }
   i.osc_join
   
-OR using a Hash map such as:
+OR by using a Hash map such as:
   
   class Instrument
   
