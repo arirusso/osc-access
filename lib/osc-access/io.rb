@@ -45,7 +45,7 @@ module OSCAccess
     def receive(target_obj, pattern, &block)
       @receivers << { :target_obj => target_obj, :pattern => pattern, :block => block }
       @servers.each do |server|
-        server.add_method(pattern) { |message| yield(target_obj, message) }
+        server.add_method(pattern.dup) { |message| yield(target_obj, message) }
       end      
     end
 

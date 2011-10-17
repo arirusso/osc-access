@@ -13,7 +13,7 @@ class Instrument
   end
   
   def velocity=(val)
-    puts "fader1 has value #{val}"
+    puts "setting velocity to #{val}"
   end
   
 end

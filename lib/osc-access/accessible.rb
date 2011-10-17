@@ -48,7 +48,7 @@ module OSCAccess
     
     def osc_load_map(map)
       osc_initialize
-      map.each { |attr, mapping| add_map_row(attr, mapping) }      
+      map.each { |attr, mapping| osc_add_map_row(attr, mapping) }      
     end
     
     def osc_translate(value, range)
@@ -123,7 +123,6 @@ module OSCAccess
       val = osc_get_arg(msg, options)
       use_range = !options[:range].nil?
       val = osc_analog(val, options[:range]) if use_range
-      p val
       respond_to?("#{attr}=") ? send("#{attr}=", val) : instance_variable_set("@#{attr}", val)
     end
 
@@ -135,7 +134,7 @@ module OSCAccess
     end
     
     def osc_add_receiver_from_map(pattern, mapping)
-      osc_receive(pattern, &mapping[:block])
+      osc_receive(pattern, &mapping[:proc])
     end
 
     def osc_add_accessor_from_map(attr, mapping)

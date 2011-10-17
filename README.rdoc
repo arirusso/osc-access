@@ -26,7 +26,7 @@ In this script, when OSC messages for <em>/1/fader1</em> are received, <em>veloc
     end
   
     def velocity=(val)
-      puts "fader1 has value #{val}"
+      puts "setting velocity to #{val}"
     end
   
   end

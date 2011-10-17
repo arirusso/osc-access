@@ -6,7 +6,7 @@ require "osc-access"
 map = {
   "/1/fader1" => { 
     :proc => Proc.new do |instance, msg| 
-      instance.pitch = osc_analog(msg.args.first, :range => { :remote => 0..1, :local => 0..127 })
+      instance.pitch = instance.osc_translate(msg.args.first, :remote => 0..1, :local => 0..127)
       instance.osc_send(msg)
     end
   }
@@ -16,9 +16,11 @@ class Instrument
   
   include OSCAccessible
   
-  attr_accessor :pitch, :velocity
+  def pitch=(val)
+    p "setting pitch to #{val}"
+  end
 
 end
 
 i = Instrument.new
-i.osc_start(:map => map).join
+i.osc_start(:map => map, :input_port => 8000).join
