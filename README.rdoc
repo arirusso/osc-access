@@ -36,7 +36,7 @@ In this script, when OSC messages for <em>/1/fader1</em> are received, <em>veloc
 
 The <em>osc_translate</em> method in this case takes the first OSC argument and translates it from a number between 0 to 1 to the analogous value between 0 and 127
 
-Input is initiated by specifying an input port as in the example.  OSC server/client sharing and management is encapsulated under the hood and invisible to the user.
+Input is initiated by specifying an input port as in the example.  OSC server/client sharing and management is invisible to the user.
 
 == Other Documentation
 
