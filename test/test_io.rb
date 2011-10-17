@@ -73,9 +73,10 @@ class IOTest < Test::Unit::TestCase
   
   def test_receive
     received = nil
+    obj = StubObject.new
     io = IO.new(:input_port => 3339)
-    io.receive(io, "/test_receive") do |obj, message|
-      received = message.args[0]
+    io.receive(obj, "/test_receive") do |obj, val|
+      received = val
     end
     client = OSC::Client.new( 'localhost', 3339 )
     client.send( OSC::Message.new( "/test_receive" , "hullo from io/receive!" ))

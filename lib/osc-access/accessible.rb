@@ -69,11 +69,10 @@ module OSCAccess
 
     protected
 
-    def osc_on_receive(attr, msg, options = {}, &block)
-      is_get = msg.to_a.empty?
-      osc_set_local(attr, msg, options) unless options[:set_local] == false || is_get
-      osc_get_local(attr, msg.address)  unless options[:get_local] == false
-      yield(self, val) unless block.nil?
+    def osc_on_receive(msg, options = {}, &block)
+      val = osc_get_arg(msg, options)
+      val = osc_translate(val, options[:translate]) unless options[:translate].nil?
+      yield(self, val)
     end
 
     private
@@ -81,60 +80,22 @@ module OSCAccess
     def osc_initialize(options = {})
       @osc ||= IO.new(options)
     end
-    
-    def osc_reader(attr, options = {}, &block)
-      options[:set_local] = false
-      osc_accessor(attr, options, &block)
-    end
-
-    def osc_writer(attr, options = {}, &block)
-      options[:get_local] = false
-      osc_accessor(attr, options, &block)
-    end
-
-    def osc_accessor(attr, options = {}, &block)
-      osc_initialize
-      pattern = options[:pattern] || DefaultPattern
-      osc_receive(pattern) { |this, msg| osc_on_receive(attr, msg, options, &block) }
-    end
         
     def osc_initialize_from_class_def
       scheme = self.class.osc_class_scheme
       scheme.inputs.each { |port| @osc.add_server(port) }
       scheme.outputs.each { |hash| @osc.add_client(hash) }
-      scheme.receivers.each { |hash| osc_receive(hash[:pattern], options, &hash[:proc]) }
-      #scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
-      #scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
-      #scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }      
+      scheme.receivers.each { |hash| osc_receive(hash[:pattern], options, &hash[:proc]) }  
     end
     
-    def osc_get_local(attr, pattern)
-      val = instance_variable_get("@#{attr.to_s}")
-      osc_send_val(pattern, val)
-    end
-
-    def osc_set_local(attr, msg, options = {})
-      val = osc_get_arg(msg, options)
-      use_range = !options[:range].nil?
-      val = osc_analog(val, options[:range]) if use_range
-      respond_to?("#{attr}=") ? send("#{attr}=", val) : instance_variable_set("@#{attr}", val)
-    end
-
-    def osc_add_map_row(key, mapping)
-      case key
-        when String then osc_add_receiver_from_map(key, mapping)
-        when Symbol then osc_add_accessor_from_map(key, mapping)
-      end
-    end
-    
-    def osc_add_receiver_from_map(pattern, mapping)
+    def osc_add_map_row(pattern, mapping)
       osc_receive(pattern, mapping, &mapping[:proc])
     end
-
-    def osc_add_accessor_from_map(attr, mapping)
-      type = mapping[:type] || :accessor
-      method = "osc_#{type}"
-      self.send(method, key, mapping)
+    
+    def osc_get_arg(msg, options = {})
+      arg = options[:arg] || 0
+      array = (!arg.nil? && arg == :all)
+      array ? msg.args : msg.args[arg]
     end
     
   end

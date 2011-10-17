@@ -40,14 +40,15 @@ class AccessibleTest < Test::Unit::TestCase
     received = nil
     obj = StubObject.new
     obj.osc_input(8061)
-    obj.osc_receive("/test_osc_input") do |obj, message|
-      received = message.args[0]
+    obj.osc_receive("/test_osc_input") do |obj, val|
+      received = val
     end
     client = OSC::Client.new("localhost", 8061)
     client.send( OSC::Message.new( "/test_osc_input", "hullo from test_osc_input!"))  
     sleep(0.5)
     assert_equal("hullo from test_osc_input!", received)  
   end
+  
   
   #def test_change_receive_port
   #  
@@ -72,8 +73,8 @@ class AccessibleTest < Test::Unit::TestCase
     }
     obj = StubObject.new
     obj.osc_input(8062)
-    obj.osc_receive("/test_load_map") do |obj, message|
-      received = message.args[0]
+    obj.osc_receive("/test_load_map") do |obj, val|
+      received = val
     end
     client = OSC::Client.new("localhost", 8062)
     client.send( OSC::Message.new( "/test_load_map", "hullo from test_load_map!"))  
@@ -90,8 +91,8 @@ class AccessibleTest < Test::Unit::TestCase
     received = nil
     obj = StubObject.new
     obj.osc_start(:input_port => 8063)
-    obj.osc_receive("/test_osc_start_input") do |obj, message|
-      received = message.args[0]
+    obj.osc_receive("/test_osc_start_input") do |obj, val|
+      received = val
     end
     client = OSC::Client.new("localhost", 8063)
     client.send( OSC::Message.new( "/test_osc_start_input", "hullo from test_osc_start_input!"))  

@@ -32,12 +32,8 @@ module OSCAccess
     
     def add_method(server, receiver)
       options = receiver[:options]
-      server.add_method(receiver[:pattern]) do |message| 
-        obj = receiver[:target_obj]
-        val = get_arg(msg, options)
-        obj.osc_translate(val, options[:translate]) unless options[:translate].nil?
-        receiver[:proc].call(obj, message)
-      end
+      obj = receiver[:target_obj]
+      server.add_method(receiver[:pattern]) { |message| obj.send(:osc_on_receive, message, options, &receiver[:proc]) }
     end
     
     def add_client(host, port)
@@ -49,15 +45,14 @@ module OSCAccess
     end
 
     def receive(target_obj, pattern, options = {}, &block)
-      @receivers << { 
+      receiver = { 
         :target_obj => target_obj, 
         :pattern => pattern, 
         :options => options, 
         :proc => block 
       }
-      @servers.each do |server|
-        server.add_method(pattern.dup) { |message| yield(target_obj, message) }
-      end      
+      @receivers << receiver
+      @servers.each { |server| add_method(server, receiver) }     
     end
 
     def self.server(port)
@@ -76,14 +71,6 @@ module OSCAccess
       @clients[host] ||= {}
       @clients[host][port] ||= OSC::Client.new(host, port)
       @clients[host][port]
-    end
-    
-    private
-    
-    def get_arg(msg, options = {})
-      arg = options[:arg] || 0
-      array = (!arg.nil? && arg == :all)
-      array ? msg.args : msg.args[arg]
     end
 
   end
