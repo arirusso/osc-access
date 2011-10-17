@@ -18,15 +18,15 @@ module OSCAccess
       @osc_class_scheme.add_accessor(attr, options, &block) 
     end
     
-    def osc_writer(attr, options = {}, &block)
-      osc_ensure_initialized
-      @osc_class_scheme.add_writer(attr, options, &block)       
-    end
+    #def osc_writer(attr, options = {}, &block)
+    #  osc_ensure_initialized
+    #  @osc_class_scheme.add_writer(attr, options, &block)       
+    #end
     
-    def osc_reader(attr, options = {}, &block)
-      osc_ensure_initialized
-      @osc_class_scheme.add_reader(attr, options, &block)       
-    end
+    #def osc_reader(attr, options = {}, &block)
+    #  osc_ensure_initialized
+    #  @osc_class_scheme.add_reader(attr, options, &block)       
+    #end
     
     def osc_output(args)
       osc_ensure_initialized

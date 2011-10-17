@@ -34,7 +34,7 @@ module OSCAccess
     
     def osc_input(arg)
       osc_initialize
-      port = arg.kind_of?(Hash) ? arg[:port] : argc
+      port = arg.kind_of?(Hash) ? arg[:port] : arg
       @osc.add_server(port)
     end
     

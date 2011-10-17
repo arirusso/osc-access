@@ -20,21 +20,21 @@ class ClassTest < Test::Unit::TestCase
     assert_equal(options, obj.class.osc_class_scheme.accessors[:whatever][:options])
   end
     
-  def test_osc_writer(*a, &block)
-    obj = StubObject.new
-    options = { :pattern => /.*/ }
-    obj.class.osc_writer(:whatever, options)
-    assert_equal(1, obj.class.osc_class_scheme.writers.size)
-    assert_equal(options, obj.class.osc_class_scheme.writers[:whatever][:options])
-  end
+  #def test_osc_writer(*a, &block)
+  #  obj = StubObject.new
+  #  options = { :pattern => /.*/ }
+  #  obj.class.osc_writer(:whatever, options)
+  #  assert_equal(1, obj.class.osc_class_scheme.writers.size)
+  #  assert_equal(options, obj.class.osc_class_scheme.writers[:whatever][:options])
+  #end
   
-  def test_osc_reader(*a, &block)
-    obj = StubObject.new
-    options = { :pattern => /.*/ }
-    obj.class.osc_reader(:whatever, options)
-    assert_equal(1, obj.class.osc_class_scheme.readers.size)
-    assert_equal(options, obj.class.osc_class_scheme.readers[:whatever][:options])
-  end
+  #def test_osc_reader(*a, &block)
+  #  obj = StubObject.new
+  #  options = { :pattern => /.*/ }
+  #  obj.class.osc_reader(:whatever, options)
+  #  assert_equal(1, obj.class.osc_class_scheme.readers.size)
+  #  assert_equal(options, obj.class.osc_class_scheme.readers[:whatever][:options])
+  #end
   
   def test_output_default_port
     obj = StubObject.new
