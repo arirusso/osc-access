@@ -1,8 +1,10 @@
 = OSCAccess
 
-OSCAccess provides a simple way to bind OSC events to Ruby classes and objects
+OSCAccess provides a simple way to bind OSC events to Ruby classes and objects.
 
 It handles management and sharing of OSC clients, allowing you to easily multiplex and handle other complex scenarios
+
+Binding can be done at class definition, using instance methods or by passing in a Hash map.
 
 == Requirements
 
