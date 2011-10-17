@@ -1,12 +1,12 @@
 = OSCAccess
 
-A simple object-oriented way to bind {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] to Ruby classes and objects.
+A simple way to bind {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] directly to Ruby classes and objects.
 
 == Features
 
 * Minimal configuration of network resources even when shared or multiplexed
-* Bind OSC events at class definition; using instance methods; or by passing in a Hash map
-* Shortcuts for common tasks associated with OSC such as translating numeric values from one range to another
+* Binding OSC events can be done in a class definition or from instance to instance
+* Includes shortcuts for common tasks associated with OSC such as translating numeric values from one range to another
 
 == Requirements
 
