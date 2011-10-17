@@ -2,9 +2,11 @@
 
 OSCAccess provides a simple way to bind OSC events to Ruby classes and objects.
 
-It handles management and sharing of OSC clients, allowing you to easily multiplex and handle other complex scenarios
+== Features
 
-Binding can be done at class definition, using instance methods or by passing in a Hash map.
+* Management and sharing of OSC clients invisibly to the user, allowing easy multiplexing and other scenarios.
+* Bind events at class definition, or by using instance methods or by passing in a Hash map.
+* Shortcuts for common tasks associated with OSC such as translating values from one range to another
 
 == Requirements
 
@@ -35,9 +37,7 @@ In this script, when OSC messages for <em>/1/fader1</em> are received, <em>veloc
   i = Instrument.new
   i.osc_start(:input_port => 8000).join  
 
-The <em>osc_translate</em> method in this case takes the first OSC argument and translates it from a number between 0 to 1 to the analogous value between 0 and 127
-
-Input is initiated by specifying an input port as in the example.  OSC server/client sharing and management is invisible to the user.
+The <em>:translate</em> option means that the first OSC argument will be translated from a number between 0 to 1 to the analogous value between 0 and 127 before being passed to the code block.
 
 == Other Documentation
 
