@@ -14,7 +14,7 @@ Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ru
   
 == Usage
 
-In this script, when OSC messages for <em>/1/fader1</em> are received, <em>velocity=</em> will be called 
+In this script, when OSC messages for <em>/1/fader1</em> are received, <em>velocity=</em> is called 
 
   class Instrument
   
@@ -35,6 +35,8 @@ In this script, when OSC messages for <em>/1/fader1</em> are received, <em>veloc
   i.osc_start(:input_port => 8000).join  
 
 The <em>osc_translate</em> method in this case takes the first OSC argument and translates it from a number between 0 to 1 to the analogous value between 0 and 127
+
+Input is initiated by specifying an input port as in the example.  OSC server/client sharing and management is encapsulated and invisible to the user.
 
 == Other Documentation
 
