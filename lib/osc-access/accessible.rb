@@ -85,11 +85,11 @@ module OSCAccess
       scheme = self.class.osc_class_scheme
       scheme.inputs.each { |port| @osc.add_server(port) }
       scheme.outputs.each { |hash| @osc.add_client(hash) }
-      scheme.receivers.each { |hash| osc_receive(hash[:pattern], options, &hash[:proc]) }  
+      scheme.receivers.each { |hash| osc_receive(hash[:pattern], hash[:options], &hash[:action]) }  
     end
     
     def osc_add_map_row(pattern, mapping)
-      osc_receive(pattern, mapping, &mapping[:proc])
+      osc_receive(pattern, mapping, &mapping[:action])
     end
     
     def osc_get_arg(msg, options = {})

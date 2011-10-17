@@ -8,9 +8,9 @@ module OSCAccess
       @osc_class_scheme
     end
     
-    def osc_receive(pattern, &block)
+    def osc_receive(pattern, options = {}, &block)
       osc_ensure_initialized
-      @osc_class_scheme.add_receiver(pattern, &block)
+      @osc_class_scheme.add_receiver(pattern, options, &block)
     end
     
     def osc_output(args)

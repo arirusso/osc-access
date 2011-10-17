@@ -12,7 +12,7 @@ module OSCAccess
     end
     
     def add_receiver(pattern, options = {}, &block)
-      @receivers << { :pattern => pattern, :options => options, :proc => block }
+      @receivers << { :pattern => pattern, :options => options, :action => block }
     end
     
   end

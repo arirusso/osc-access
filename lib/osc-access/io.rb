@@ -33,7 +33,7 @@ module OSCAccess
     def add_method(server, receiver)
       options = receiver[:options]
       obj = receiver[:target_obj]
-      server.add_method(receiver[:pattern].dup) { |message| obj.send(:osc_on_receive, message, options, &receiver[:proc]) }
+      server.add_method(receiver[:pattern].dup) { |message| obj.send(:osc_on_receive, message, options, &receiver[:action]) }
     end
     
     def add_client(host, port)
@@ -49,7 +49,7 @@ module OSCAccess
         :target_obj => target_obj, 
         :pattern => pattern, 
         :options => options, 
-        :proc => block 
+        :action => block 
       }
       @receivers << receiver
       @servers.each { |server| add_method(server, receiver) }     
