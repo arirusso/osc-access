@@ -49,37 +49,85 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal("hullo from test_osc_input!", received)  
   end
   
+  def test_osc_receive_translate
+    received = nil
+    obj = StubObject.new
+    obj.osc_start(:input_port => 8061)
+    obj.osc_receive("/test_osc_receive_translate", :translate => 0..127) do |obj, val|
+      received = val
+    end
+    client = OSC::Client.new("localhost", 8061)
+    client.send( OSC::Message.new( "/test_osc_receive_translate", 0.5))  
+    sleep(0.5)
+    assert_equal(63, received)  
+  end
   
-  #def test_change_receive_port
-  #  
-  #end
-  
-  #def test_change_transmit_port
-  #  
-  #end
-
-  #def test_change_transmit_ip
-  #  
-  #end
-  
+  def test_osc_receive_arg
+    received = nil
+    obj = StubObject.new
+    obj.osc_start(:input_port => 8061)
+    obj.osc_receive("/test_osc_receive_arg", :arg => 1) do |obj, val|
+      received = val
+    end
+    client = OSC::Client.new("localhost", 8061)
+    client.send( OSC::Message.new( "/test_osc_receive_arg",5,4,3,2,1))  
+    sleep(0.5)
+    assert_equal(4, received)  
+  end  
   def test_load_map
     received = nil
     map = {
       "/test_load_map" => { 
-        :proc => Proc.new do |instance, msg| 
-          
+        :proc => Proc.new do |instance, val| 
+          received = val
         end
       }
     }
     obj = StubObject.new
     obj.osc_input(8062)
-    obj.osc_receive("/test_load_map") do |obj, val|
-      received = val
-    end
+    obj.osc_load_map(map)
     client = OSC::Client.new("localhost", 8062)
     client.send( OSC::Message.new( "/test_load_map", "hullo from test_load_map!"))  
     sleep(0.5)
     assert_equal("hullo from test_load_map!", received)  
+  end
+  
+  def test_load_map_translate
+    received = nil
+    map = {
+      "/test_load_map_translate" => { 
+        :translate => 0..127,
+        :proc => Proc.new do |instance, val| 
+          received = val
+        end
+      }
+    }
+    obj = StubObject.new
+    obj.osc_input(8065)
+    obj.osc_load_map(map)
+    client = OSC::Client.new("localhost", 8065)
+    client.send( OSC::Message.new( "/test_load_map_translate", 0.5) ) 
+    sleep(0.5)
+    assert_equal(63, received)  
+  end
+  
+  def test_load_map_arg
+    received = nil
+    map = {
+      "/test_load_map_arg" => { 
+        :arg => 2,
+        :proc => Proc.new do |instance, val| 
+          received = val
+        end
+      }
+    }
+    obj = StubObject.new
+    obj.osc_input(8066)
+    obj.osc_load_map(map)
+    client = OSC::Client.new("localhost", 8066)
+    client.send( OSC::Message.new( "/test_load_map_arg",0,1,2,3,4) ) 
+    sleep(0.5)
+    assert_equal(2, received)  
   end
     
   def test_class_included
