@@ -39,7 +39,7 @@ In this script, when OSC messages for <em>/1/fader1</em> are received, <em>veloc
 
 The <em>:translate</em> option means that the first OSC argument will be translated from a number between 0 to 1 to the analogous value between 0 and 127 before being passed to the code block.
 
-Or, here is the same object but created by passing a Hash map to the instance:
+Or, here is an example that produces the same object, but it's created by passing a Hash map to the instance:
 
   map = {
     "/1/fader1" => { 
