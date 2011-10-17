@@ -128,7 +128,7 @@ module OSCAccess
     end
     
     def osc_add_receiver_from_map(pattern, mapping)
-      osc_receive(pattern, mapping[:options], &mapping[:proc])
+      osc_receive(pattern, mapping, &mapping[:proc])
     end
 
     def osc_add_accessor_from_map(attr, mapping)

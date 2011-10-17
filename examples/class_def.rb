@@ -7,8 +7,7 @@ class Instrument
   
   include OSCAccessible
 
-  osc_receive "/1/fader1" do |instance, msg|
-    val = instance.osc_translate(msg.args.first, :local => 0..127, :remote => 0..1 )
+  osc_receive("/1/fader1", :translate => { :remote => 0..1, :local => 0..127 }) do |instance, val|
     instance.velocity = val
   end
   

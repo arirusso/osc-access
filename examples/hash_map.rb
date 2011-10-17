@@ -5,10 +5,8 @@ require "osc-access"
 
 map = {
   "/1/fader1" => { 
-    :proc => Proc.new do |instance, msg| 
-      instance.pitch = instance.osc_translate(msg.args.first, :remote => 0..1, :local => 0..127)
-      instance.osc_send(msg)
-    end
+    :translate => { :remote => 0..1, :local => 0..127 }
+    :proc => Proc.new { |instance, val| instance.pitch = val }
   }
 }
   
