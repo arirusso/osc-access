@@ -102,10 +102,10 @@ module OSCAccess
       scheme = self.class.osc_class_scheme
       scheme.inputs.each { |port| @osc.add_server(port) }
       scheme.outputs.each { |hash| @osc.add_client(hash) }
-      scheme.receivers.each { |hash| osc_receive(hash[:pattern], &hash[:block]) }
-      scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
-      scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
-      scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }      
+      scheme.receivers.each { |hash| osc_receive(hash[:pattern], options, &hash[:proc]) }
+      #scheme.accessors.each { |attr, args| osc_accessor(attr, args[:options], &args[:block]) }
+      #scheme.readers.each { |attr, args| osc_reader(attr, args[:options], &args[:block]) }
+      #scheme.writers.each { |attr, args| osc_writer(attr, args[:options], &args[:block]) }      
     end
     
     def osc_get_local(attr, pattern)
@@ -128,7 +128,7 @@ module OSCAccess
     end
     
     def osc_add_receiver_from_map(pattern, mapping)
-      osc_receive(pattern, &mapping[:proc])
+      osc_receive(pattern, mapping[:options], &mapping[:proc])
     end
 
     def osc_add_accessor_from_map(attr, mapping)

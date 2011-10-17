@@ -15,8 +15,8 @@ module OSCAccess
       @accessors, @readers, @writers = {}, {}, {}
     end
     
-    def add_receiver(pattern, &block)
-      @receivers << { :pattern => pattern, :block => block }
+    def add_receiver(pattern, options = {}, &block)
+      @receivers << { :pattern => pattern, :options => options, :proc => block }
     end
     
     def add_accessor(attr, options = {}, &block)
