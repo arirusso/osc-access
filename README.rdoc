@@ -41,26 +41,26 @@ The <em>:translate</em> option means that the first OSC argument will be transla
 
 Or, here is the same object but created by passing a Hash map to the instance:
 
-map = {
-  "/1/fader1" => { 
-    :translate => { :remote => 0..1, :local => 0..127 }
-    :action => Proc.new { |instance, val| instance.pitch = val }
+  map = {
+    "/1/fader1" => { 
+      :translate => { :remote => 0..1, :local => 0..127 }
+      :action => Proc.new { |instance, val| instance.pitch = val }
+    }
   }
-}
   
-class Instrument
+  class Instrument
   
-  include OSCAccessible
+    include OSCAccessible
   
-  def pitch=(val)
-    p "setting pitch to #{val}"
-    ...
+    def pitch=(val)
+      p "setting pitch to #{val}"
+      ...
+    end
+
   end
 
-end
-
-i = Instrument.new
-i.osc_start(:map => map, :input_port => 8000).join
+  i = Instrument.new
+  i.osc_start(:map => map, :input_port => 8000).join
 
 == Other Documentation
 
