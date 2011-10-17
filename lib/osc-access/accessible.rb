@@ -7,9 +7,9 @@ module OSCAccess
       base.extend(Class)
     end
 
-    def osc_receive(pattern, &block)
+    def osc_receive(pattern, options = {}, &block)
       osc_initialize
-      @osc.receive(self, pattern, &block)
+      @osc.receive(self, pattern, options, &block)
     end
 
     def osc_send(msg)
@@ -111,12 +111,6 @@ module OSCAccess
     def osc_get_local(attr, pattern)
       val = instance_variable_get("@#{attr.to_s}")
       osc_send_val(pattern, val)
-    end
-
-    def osc_get_arg(msg, options = {})
-      arg = options[:arg] || 0
-      array = (!arg.nil? && arg == :all)
-      array ? msg.args : msg.args[arg]
     end
 
     def osc_set_local(attr, msg, options = {})
