@@ -29,13 +29,13 @@ module OSCAccess
     
     def osc_output(args)
       osc_initialize
-      @osc.add_client(args[:host], args[:port])
+      [args].flatten.each do { |pair| @osc.add_client(pair[:host], pair[:port]) }
     end
     
     def osc_input(arg)
       osc_initialize
-      port = arg.kind_of?(Hash) ? arg[:port] : arg
-      @osc.add_server(port)
+      just_ports = arg.kind_of?(Hash) ? arg[:port] : arg
+      [just_ports].flatten.each { |port| @osc.add_server(port) }
     end
     
     def osc_start(options = {})
