@@ -74,11 +74,12 @@ class AccessibleTest < Test::Unit::TestCase
     sleep(0.5)
     assert_equal(4, received)  
   end  
+  
   def test_load_map
     received = nil
     map = {
       "/test_load_map" => { 
-        :proc => Proc.new do |instance, val| 
+        :action => Proc.new do |instance, val| 
           received = val
         end
       }
@@ -97,7 +98,7 @@ class AccessibleTest < Test::Unit::TestCase
     map = {
       "/test_load_map_translate" => { 
         :translate => 0..127,
-        :proc => Proc.new do |instance, val| 
+        :action => Proc.new do |instance, val| 
           received = val
         end
       }
@@ -116,7 +117,7 @@ class AccessibleTest < Test::Unit::TestCase
     map = {
       "/test_load_map_arg" => { 
         :arg => 2,
-        :proc => Proc.new do |instance, val| 
+        :action => Proc.new do |instance, val| 
           received = val
         end
       }

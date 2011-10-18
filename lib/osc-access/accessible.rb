@@ -29,7 +29,7 @@ module OSCAccess
     
     def osc_output(args)
       osc_initialize
-      [args].flatten.each do { |pair| @osc.add_client(pair[:host], pair[:port]) }
+      [args].flatten.each { |pair| @osc.add_client(pair[:host], pair[:port]) }
     end
     
     def osc_input(arg)
@@ -40,9 +40,10 @@ module OSCAccess
     
     def osc_start(options = {})
       osc_initialize(options)
-      @osc.initialize_node(options)
-      osc_initialize_from_class_def
+      osc_input(options[:input_port]) unless options[:input_port].nil?
+      osc_output(options[:output]) unless options[:output].nil?
       osc_load_map(options[:map]) unless options[:map].nil?
+      osc_initialize_from_class_def
       @osc.threads.values.last || Thread.new { loop {} }
     end
     

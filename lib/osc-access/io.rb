@@ -8,12 +8,6 @@ module OSCAccess
     def initialize(options = {})
       @clients, @receivers, @servers = [], [], []
       @threads = {}
-      initialize_node(options) 
-    end
-    
-    def initialize_node(options = {})
-      add_server(options[:input_port]) unless options[:input_port].nil?
-      add_client(options[:output][:host], options[:output][:port]) unless options[:output].nil?
     end
     
     def join

@@ -8,35 +8,48 @@ class IOTest < Test::Unit::TestCase
   include TestHelper
   
   def test_server_initialized
-    io = IO.new(:input_port => 8000)
+    io = IO.new
+    io.add_server(8000)
     assert_not_nil(io.servers.last)
   end
   
   def test_client_initialized
-    io = IO.new(:input_port => 8001, :output => { :port => 9000, :host => "1.1.1.2" })
+    io = IO.new
+    io.add_server(8001)
+    io.add_client("1.1.1.2", 9000)
     assert_not_nil(io.clients.last)    
   end
   
   def test_two_servers
-    io1 = IO.new(:input_port => 8002)
+    io1 = IO.new
+    io1.add_server(8002)
     server1 = io1.servers.last
-    io2 = IO.new(:input_port => 8003)
+    io2 = IO.new
+    io2.add_server(8003)
     server2 = io2.servers.last
     assert_not_equal(server1, server2)    
   end
   
   def test_two_clients
-    io1 = IO.new(:input_port => 8004, :output => { :port => 9001, :host => "1.1.1.1" })
+    io1 = IO.new
+    io1.add_server(8004)
+    io1.add_client("1.1.1.1", 9001)
     client1 = io1.clients.last     
-    io2 = IO.new(:input_port => 8005, :output => { :port => 9002, :host => "1.1.1.2" })
+    io2 = IO.new
+    io2.add_server(8005)
+    io2.add_client("1.1.1.2", 9002)
     client2 = io2.clients.last
     assert_not_equal(client1, client2)    
   end
   
   def test_two_clients_same_ip
-    io1 = IO.new(:input_port => 8006, :output => { :port => 9003, :host => "1.1.1.1" })
-    client1 = io1.clients.last      
-    io2 = IO.new(:input_port => 8007, :output => { :port => 9004, :host => "1.1.1.1" })
+    io1 = IO.new
+    io1.add_server(8006)
+    io1.add_client("1.1.1.1", 9003)
+    client1 = io1.clients.last   
+    io2 = IO.new
+    io2.add_server(8007)   
+    io2.add_client("1.1.1.1", 9004)
     client2 = io2.clients.last      
     assert_not_equal(client1, client2)    
   end
@@ -50,16 +63,22 @@ class IOTest < Test::Unit::TestCase
   end
   
   def test_share_client
-    io1 = IO.new(:input_port => 8009, :output => { :port => 9005, :host => "1.1.1.1" })
+    io1 = IO.new
+    io1.add_server(8009)
+    io1.add_client("1.1.1.1", 9005)
     client1 = io1.clients.last     
-    io2 = IO.new(:input_port => 8010, :output => { :port => 9005, :host => "1.1.1.1" })
+    io2 = IO.new
+    io2.add_server(8010)   
+    io2.add_client("1.1.1.1", 9005)
     client2 = io2.clients.last      
     assert_equal(client1, client2)
   end
   
   def test_transmit
     received = nil
-    io = IO.new(:input_port => 9015, :output => { :port => 4000, :host => "localhost" })
+    io = IO.new
+    io.add_server(9015)
+    io.add_client("localhost", 4000)
     @server = OSC::EMServer.new(4000)
     @server.add_method("/test_transmit") do |message|
       received = message.args[0]
@@ -74,7 +93,8 @@ class IOTest < Test::Unit::TestCase
   def test_receive
     received = nil
     obj = StubObject.new
-    io = IO.new(:input_port => 3339)
+    io = IO.new
+    io.add_server(3339)
     io.receive(obj, "/test_receive") do |obj, val|
       received = val
     end
