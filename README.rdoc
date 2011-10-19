@@ -76,4 +76,4 @@ Or, here is an example that produces the same object, but it's created by passin
 
 Licensed under Apache 2.0, See the file LICENSE
 
-Copyright © 2011 Ari Russo
+Copyright ©2011 Ari Russo
