@@ -74,6 +74,7 @@ module OSCAccess
     def osc_on_receive(msg, options = {}, &block)
       val = osc_get_arg(msg, options)
       val = osc_translate(val, options[:translate]) unless options[:translate].nil?
+      osc_send(msg) if options[:thru]
       yield(self, val)
     end
 
