@@ -55,10 +55,12 @@ module OSCAccess
     
     def osc_start(options = {})
       osc_initialize(options)
+      osc_initialize_from_class_def
+      osc_load_map(options[:map]) unless options[:map].nil?
+      
       osc_input(options[:input_port]) unless options[:input_port].nil?
       osc_output(options[:output]) unless options[:output].nil?
-      osc_load_map(options[:map]) unless options[:map].nil?
-      osc_initialize_from_class_def
+      
       @osc.threads.values.last || Thread.new { loop {} }
     end
     
@@ -89,7 +91,7 @@ module OSCAccess
       val = osc_process_arg_option(msg, options)
       val = osc_translate(val, options[:translate]) unless options[:translate].nil?
       osc_send(msg) if options[:thru]
-      yield(self, val)
+      yield(self, val, msg) unless block.nil?
     end
 
     private

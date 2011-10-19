@@ -18,4 +18,4 @@ class Instrument
 end
 
 i = Instrument.new
-i.osc_start(:input_port => 8000...8010).join
+i.osc_start(:input_port => 8000..8002).join

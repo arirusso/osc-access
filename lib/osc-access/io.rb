@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
 module OSCAccess
-  
+
   class IO
-    
+        
     attr_reader :clients, :servers, :threads
     
     def initialize(options = {})
-      @clients, @receivers, @servers = [], [], []
+      @clients, @receivers, @servers = [], [], [], []
       @threads = {}
+      @cached_message = nil
     end
     
     def join
@@ -20,14 +21,22 @@ module OSCAccess
       thread = pair[:thread]
       @servers << server
       @receivers.each { |receiver| add_method(server, receiver) }
-      @threads[server] = thread
+      @threads[port] = thread
       thread
     end
     
     def add_method(server, receiver)
       options = receiver[:options]
       obj = receiver[:target_obj]
-      server.add_method(receiver[:pattern].dup) { |message| obj.send(:osc_on_receive, message, options, &receiver[:action]) }
+      pattern = receiver[:pattern].dup
+      # this prevents the same action being called multiple times when
+      # an IO object has multiple servers
+      server.add_method(pattern) do |message| 
+        unless @cached_message === message
+          obj.send(:osc_on_receive, message, options, &receiver[:action]) 
+          @cached_message = message
+        end
+      end
     end
     
     def add_client(host, port)

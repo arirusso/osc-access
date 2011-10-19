@@ -220,6 +220,23 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal("hullo from test_osc_start_input!", received)      
   end
   
+  def test_osc_multiplex_input
+    sleep(1)
+    received = 0 
+    obj = StubObject.new
+    obj.osc_start(:input_port => 8080..8082)
+    obj.osc_receive("/test_osc_multiplex_input") do |obj, val|
+      received += 1
+    end
+    sleep(0.5)
+    3.times do |i|
+      client = OSC::Client.new("localhost", 8080 + i)
+      client.send( OSC::Message.new( "/test_osc_multiplex_input", i))  
+    end
+    sleep(0.5)
+    assert_equal(3, received)      
+  end
+  
   def test_osc_start_output
     sleep(1)
     received = nil

@@ -27,6 +27,8 @@ class IOTest < Test::Unit::TestCase
     io2 = IO.new
     io2.add_server(8003)
     server2 = io2.servers.last
+    assert_equal(1, io1.servers.size)
+    assert_equal(1, io2.servers.size)
     assert_not_equal(server1, server2)    
   end
   
@@ -39,6 +41,8 @@ class IOTest < Test::Unit::TestCase
     io2.add_server(8005)
     io2.add_client("1.1.1.2", 9002)
     client2 = io2.clients.last
+    assert_equal(1, io1.clients.size)
+    assert_equal(1, io2.clients.size)
     assert_not_equal(client1, client2)    
   end
   
