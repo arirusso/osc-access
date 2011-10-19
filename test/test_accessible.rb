@@ -86,6 +86,16 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal("hullo from test_osc_input!", received)  
   end
   
+  def test_osc_process_ports_args
+    obj = StubObject.new
+    assert_equal([8000], obj.send(:osc_process_ports_args, [8000]))
+    assert_equal([8000], obj.send(:osc_process_ports_args, [[8000]]))
+    assert_equal((8000..8010).to_a, obj.send(:osc_process_ports_args, [8000..8010]))
+    assert_equal((8000..8010).to_a, obj.send(:osc_process_ports_args, [[8000..8010]]))
+    assert_equal([8000], obj.send(:osc_process_ports_args, [:port => 8000]))
+  end
+  
+  
   def test_osc_receive_translate
     sleep(0.5)
     received = nil

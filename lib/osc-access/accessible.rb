@@ -27,16 +27,30 @@ module OSCAccess
       osc_initialize
       @osc.join
     end
-    
-    def osc_output(args)
+
+    # osc_output takes arguments as such:
+    #
+    # osc_output(:host => "localhost", :port => 9000)
+    # osc_output(:host => "localhost", :port => [9000, 9002, 9005])
+    # osc_output(:host => "localhost", :port => 9000..9010)
+    #    
+    def osc_output(pair)
       osc_initialize
-      [args].flatten.each { |pair| @osc.add_client(pair[:host], pair[:port]) }
+      ports = osc_process_ports_args(pair[:port])
+      ports.each { |port| @osc.add_client(pair[:host], port) }
     end
     
-    def osc_input(arg)
+    # osc_input takes arguments as such:
+    #
+    # osc_input(8000)
+    # osc_input(:port => 8000)
+    # osc_input(8000, 8005, 8010)
+    # osc_input(8000..8010)
+    #
+    def osc_input(*args)
       osc_initialize
-      just_ports = arg.kind_of?(Hash) ? arg[:port] : arg
-      [just_ports].flatten.each { |port| @osc.add_server(port) }
+      ports = osc_process_ports_args(args)
+      ports.each { |port| @osc.add_server(port) }
     end
     
     def osc_start(options = {})
@@ -72,7 +86,7 @@ module OSCAccess
     protected
 
     def osc_on_receive(msg, options = {}, &block)
-      val = osc_get_arg(msg, options)
+      val = osc_process_arg_option(msg, options)
       val = osc_translate(val, options[:translate]) unless options[:translate].nil?
       osc_send(msg) if options[:thru]
       yield(self, val)
@@ -95,10 +109,19 @@ module OSCAccess
       osc_receive(pattern, mapping, &mapping[:action])
     end
     
-    def osc_get_arg(msg, options = {})
+    def osc_process_arg_option(msg, options = {})
       arg = options[:arg] || 0
       array = (!arg.nil? && arg == :all)
       array ? msg.args : msg.args[arg]
+    end
+    
+    def osc_process_ports_args(args)
+      case args
+        when Array then args.map { |a| osc_process_ports_args(a) }.flatten
+        when Hash then osc_process_ports_args(args[:port])
+        when Range then args.to_a
+        when Numeric then [args]
+      end
     end
     
   end
