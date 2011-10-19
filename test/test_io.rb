@@ -85,9 +85,9 @@ class IOTest < Test::Unit::TestCase
     end 
     Thread.new { @server.run }
     sleep(0.5)
-    io.transmit(OSC::Message.new( "/test_transmit" , "hullo from io/transmit!" ))
+    io.transmit(OSC::Message.new( "/test_transmit" , "hullo from io test_transmit!" ))
     sleep(0.5)
-    assert_equal("hullo from io/transmit!", received)
+    assert_equal("hullo from io test_transmit!", received)
   end
   
   def test_receive
@@ -98,10 +98,11 @@ class IOTest < Test::Unit::TestCase
     io.receive(obj, "/test_receive") do |obj, val|
       received = val
     end
+    sleep(0.5)
     client = OSC::Client.new( 'localhost', 3339 )
-    client.send( OSC::Message.new( "/test_receive" , "hullo from io/receive!" ))
+    client.send( OSC::Message.new( "/test_receive" , "hullo from io test_receive!" ))
     sleep(0.5)    
-    assert_equal("hullo from io/receive!", received)
+    assert_equal("hullo from io test_receive!", received)
   end
   
 end
