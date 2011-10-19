@@ -12,14 +12,15 @@ module OSCAccess
       @osc.receive(self, pattern, options, &block)
     end
 
-    def osc_send(msg)
+    def osc_send(*a)
       osc_initialize
+      if a.first.kind_of?(OSC::Message)
+        msg = a.pop
+        osc_send(*a) unless a.empty?
+      else
+        msg = OSC::Message.new(*a)
+      end
       @osc.transmit(msg)
-    end
-    
-    def osc_send_val(pattern, val)
-      msg = OSC::Message.new(pattern, val)
-      osc_send(msg)
     end
 
     def osc_join

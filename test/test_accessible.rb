@@ -22,7 +22,7 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal(0.10, outp)     
   end
   
-  def test_osc_output
+  def test_osc_send
     received = nil
     obj = StubObject.new
     obj.osc_output(:port => 8060, :host => "localhost")
@@ -31,9 +31,39 @@ class AccessibleTest < Test::Unit::TestCase
       received = message.args[0]
     end 
     Thread.new { server.run }
-    obj.osc_send_val("/test_osc_output", "hi friend")
+    obj.osc_send("/test_osc_output", "hi friend")
     sleep(0.5)
     assert_equal("hi friend", received)
+  end
+    
+  def test_osc_send_msg
+    received = nil
+    obj = StubObject.new
+    obj.osc_output(:port => 8067, :host => "localhost")
+    server = OSC::EMServer.new(8067)
+    server.add_method("/test_osc_output") do |message|
+      received = message.args[0]
+    end 
+    Thread.new { server.run }
+    obj.osc_send(OSC::Message.new("/test_osc_output", "hi friend"))
+    sleep(0.5)
+    assert_equal("hi friend", received)
+  end
+  
+  def test_osc_send_msg_multi
+    received = nil
+    obj = StubObject.new
+    obj.osc_output(:port => 8068, :host => "localhost")
+    server = OSC::EMServer.new(8068)
+    server.add_method("/test_osc_output") do |message|
+      received = message.args[0]
+    end 
+    Thread.new { server.run }
+    obj.osc_send(OSC::Message.new("/test_osc_output", "hi friend"), 
+                 OSC::Message.new("/test_osc_output", "hello friend"),
+                 OSC::Message.new("/test_osc_output", "three amigos"))
+    sleep(0.5)
+    assert_equal("three amigos", received)
   end
     
   def test_osc_input
@@ -158,7 +188,7 @@ class AccessibleTest < Test::Unit::TestCase
       received = message.args[0]
     end 
     Thread.new { server.run }
-    obj.osc_send_val("/test_osc_start_output", "hi from test_osc_start_output")
+    obj.osc_send("/test_osc_start_output", "hi from test_osc_start_output")
     sleep(0.5)
     assert_equal("hi from test_osc_start_output", received)    
   end
