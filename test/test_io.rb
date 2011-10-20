@@ -99,6 +99,7 @@ class IOTest < Test::Unit::TestCase
     obj = StubObject.new
     io = IO.new
     io.add_server(3339)
+    IO.start
     io.receive(obj, "/test_receive") do |obj, val|
       received = val
     end

@@ -77,6 +77,7 @@ class AccessibleTest < Test::Unit::TestCase
     received = nil
     obj = StubObject.new
     obj.osc_input(8061)
+    obj.osc_start
     obj.osc_receive("/test_osc_input") do |obj, val|
       received = val
     end
@@ -135,6 +136,7 @@ class AccessibleTest < Test::Unit::TestCase
     }
     obj = StubObject.new
     obj.osc_input(8062)
+    obj.osc_start
     obj.osc_load_map(map)
     client = OSC::Client.new("localhost", 8062)
     client.send( OSC::Message.new( "/test_load_map", "hullo from test_load_map!"))  
@@ -154,6 +156,7 @@ class AccessibleTest < Test::Unit::TestCase
     }
     obj = StubObject.new
     obj.osc_input(8065)
+    obj.osc_start
     obj.osc_load_map(map)
     client = OSC::Client.new("localhost", 8065)
     client.send( OSC::Message.new( "/test_load_map_translate", 0.5) ) 
@@ -174,6 +177,7 @@ class AccessibleTest < Test::Unit::TestCase
     obj = StubObject.new
     obj.osc_input(8066)
     obj.osc_load_map(map)
+    obj.osc_start
     client = OSC::Client.new("localhost", 8066)
     client.send( OSC::Message.new( "/test_load_map_arg",0,1,2,3,4) ) 
     sleep(0.5)
