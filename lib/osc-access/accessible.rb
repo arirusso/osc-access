@@ -61,6 +61,7 @@ module OSCAccess
       osc_input(options[:input_port]) unless options[:input_port].nil?
       osc_output(options[:output]) unless options[:output].nil?
       
+      IO.start
       @osc.threads.values.last || Thread.new { loop {} }
     end
     

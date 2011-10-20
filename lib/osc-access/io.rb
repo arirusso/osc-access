@@ -46,6 +46,15 @@ module OSCAccess
     def transmit(*a)
       @clients.each { |c| c.send(*a) }
     end
+    
+    def self.start
+      @servers.each do |port, server|
+        @threads[port] ||= Thread.new do
+          Thread.abort_on_exception = true
+          @servers[port].run
+        end
+      end
+    end
 
     def receive(target_obj, pattern, options = {}, &block)
       receiver = { 
@@ -62,10 +71,6 @@ module OSCAccess
       @servers ||= {}
       @servers[port] ||= OSC::EMServer.new(port) 
       @threads ||= {}
-      @threads[port] ||= Thread.new do
-        Thread.abort_on_exception = true
-        @servers[port].run
-      end
       { :server => @servers[port], :thread => @threads[port] }
     end
     
