@@ -8,13 +8,15 @@ require "osc-access"
 # you can pass the map to osc_start as such
 # or you could call i.osc_load_map(map)
 
+# notice that :remote is not set for the second mapping -- the default value for :remote is 0..1
+
 map = {
   "/1/fader1" => { 
     :translate => { :remote => 0..1, :local => 0..127 },
     :action => Proc.new { |instance, val| instance.pitch = val }
   }
   "/1/fader2" => { 
-    :translate => { :remote => 0..1, :local => 0..127 },
+    :translate => { :local => 0..127 },
     :action => Proc.new { |instance, val| instance.velocity = val }
   }
 }
