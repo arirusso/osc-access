@@ -5,6 +5,8 @@ require "osc-access"
 
 # this example relays all messages from the input to the output
 
+# notice that the :thru option is set to true on osc_receive
+
 class Instrument
   
   include OSCAccessible
