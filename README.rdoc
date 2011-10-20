@@ -66,7 +66,7 @@ Or, here is an example that produces the same object, but it's created by passin
   i = Instrument.new
   i.osc_start(:map => map, :input_port => 8000, :output => { :host => "192.168.1.8", :port => 9000}).join
   
-{Here's a blog post}[] that explains these examples and more in further depth.
+{Here's a blog post}[http://tx81z.blogspot.com/2011/10/osc-access-build-osc-into-ruby-objects.html] that explains these examples in further depth and much more.
 
 == Other Documentation
 
