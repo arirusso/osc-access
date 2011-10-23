@@ -72,7 +72,7 @@ module OSCAccess
     
     def osc_translate(value, range)
       new_vals = [value].flatten.map do |single_value|
-        if range.kind_of?(Range)
+        if range.kind_of?(Range) || range.kind_of?(Array)
           remote = 0..1
           local = range
           type = nil
@@ -81,7 +81,7 @@ module OSCAccess
           local = range[:local]
           type = range[:type]
         end
-        RangeAnalog.new(remote, local).process(value, :type => type)
+        Analog.new(remote, local).process(value, :type => type)
       end
       value.kind_of?(Array) ? new_vals : new_vals.first
     end

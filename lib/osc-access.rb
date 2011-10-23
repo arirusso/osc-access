@@ -14,10 +14,10 @@ require "osc-access/accessible"
 require "osc-access/class"
 
 # classes
+require "osc-access/analog"
 require "osc-access/class_scheme"
 require "osc-access/io"
 require "osc-access/message"
-require "osc-access/range_analog"
 
 # other
 require "osc-access/default"

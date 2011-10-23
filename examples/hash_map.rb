@@ -14,10 +14,14 @@ map = {
   "/1/fader1" => { 
     :translate => { :remote => 0..1, :local => 0..127 },
     :action => Proc.new { |instance, val| instance.pitch = val }
-  }
+  },
   "/1/fader2" => { 
-    :translate => { :local => 0..127 },
+    :translate => 0..127,
     :action => Proc.new { |instance, val| instance.velocity = val }
+  },
+  "/1/rotary1" => {
+    :translate => [128, 64, 32, 16, 8, 4, 2, 1]
+    :action => Proc.new { |instance, val| p val }
   }
 }
   
