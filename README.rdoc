@@ -7,6 +7,7 @@ A simple way to bind {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] dire
 * Binding OSC events can be done by class or by instance
 * Network resources are invisible to the user even when shared or multiplexed
 * Shortcuts for common tasks associated with OSC such as translating numeric values from one range to another
+* Make OSC-accessible objects discoverable on a network using {Zeroconf}[http://en.wikipedia.org/wiki/Zero_configuration_networking]
 
 == Requirements
 
