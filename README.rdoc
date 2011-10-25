@@ -10,11 +10,9 @@ A simple way to bind {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] dire
 
 == Requirements
 
-Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ruby}[http://github.com/aberant/osc-ruby] 
+Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ruby}[http://github.com/aberant/osc-ruby].  These should install automatically with the gem
 
-On Linux and OSX, {dnssd}[http://github.com/tenderlove/dnssd] is required too.  Zeroconf is not currently supported under windows
-
-These should install automatically with the gem
+For Zeroconf support, {dnssd}[http://github.com/tenderlove/dnssd] is required.
 
 == Installation
 
