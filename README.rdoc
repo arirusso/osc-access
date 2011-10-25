@@ -10,13 +10,19 @@ A simple way to bind {OSC}[http://en.wikipedia.org/wiki/Open_Sound_Control] dire
 
 == Requirements
 
-Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ruby}[http://github.com/aberant/osc-ruby] which should install automatically with the gem
+Requires {eventmachine}[http://github.com/eventmachine/eventmachine] and {osc-ruby}[http://github.com/aberant/osc-ruby] 
+
+On Linux and OSX, {dnssd}[http://github.com/tenderlove/dnssd] is required too.  Zeroconf is not currently supported under windows
+
+These should install automatically with the gem
 
 == Installation
 
   gem install osc-access
   
 == Usage
+
+  require "osc-access"
 
 In this example when OSC messages for <em>/1/fader1</em> are received, <em>velocity=</em> is called and another message is outputted confirming that the first message was received
 
