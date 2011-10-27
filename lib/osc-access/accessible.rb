@@ -109,7 +109,8 @@ module OSCAccess
     end
     
     def osc_add_map_row(pattern, mapping)
-      osc_receive(pattern, mapping, &mapping[:action])
+      action = mapping.kind_of?(Hash) ? mapping[:action] : mapping
+      osc_receive(pattern, mapping, &action)
     end
     
     def osc_process_arg_option(msg, options = {})

@@ -125,6 +125,23 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal(4, received)  
   end  
   
+  def test_load_map_inline_proc
+    received = nil
+    map = {
+      "/test_load_map_inline_proc" => Proc.new do |instance, val| 
+          received = val
+        end
+    }
+    obj = StubObject.new
+    obj.osc_input(8083)
+    obj.osc_start
+    obj.osc_load_map(map)
+    client = OSC::Client.new("localhost", 8083)
+    client.send( OSC::Message.new( "/test_load_map_inline_proc", "hullo from test_load_map_inline_proc!"))  
+    sleep(0.5)
+    assert_equal("hullo from test_load_map_inline_proc!", received)  
+  end
+  
   def test_load_map
     received = nil
     map = {
