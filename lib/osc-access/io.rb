@@ -47,9 +47,11 @@ module OSCAccess
       @clients.each { |c| c.send(*a) }
     end
     
-    def self.start
+    def self.start(options = {})
+      zeroconf_name = options[:zeroconf_name] || "osc-access"
       @servers.each do |port, server|
         @threads[port] ||= Thread.new do
+          ZeroconfService.new(zeroconf_name, port)
           Thread.abort_on_exception = true
           @servers[port].run
         end

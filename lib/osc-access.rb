@@ -18,6 +18,7 @@ require "osc-access/analog"
 require "osc-access/class_scheme"
 require "osc-access/io"
 require "osc-access/message"
+require "osc-access/zeroconf"
 
 # other
 require "osc-access/default"
