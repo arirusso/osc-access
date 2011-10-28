@@ -6,7 +6,7 @@ module OSCAccess
     attr_reader :clients, :servers, :threads
     
     def initialize(options = {})
-      @clients, @receivers, @servers = [], [], [], []
+      @clients, @receivers, @servers, @services = [], [], [], [], []
       @threads = {}
       @cached_message = nil
     end
@@ -49,11 +49,11 @@ module OSCAccess
     
     def self.start(options = {})
       zeroconf_name = options[:zeroconf_name] || "osc-access"
-      @servers.each do |port, server|
-        @threads[port] ||= Thread.new do
-          ZeroconfService.new(zeroconf_name, port)
+      @servers.each do |port, hash|
+        @servers[port][:thread] ||= Thread.new do
+          @servers[port][:service] ||= Zeroconf::Service.new(zeroconf_name, port).start
           Thread.abort_on_exception = true
-          @servers[port].run
+          @servers[port][:server].run
         end
       end
     end
@@ -71,9 +71,8 @@ module OSCAccess
 
     def self.server(port)
       @servers ||= {}
-      @servers[port] ||= OSC::EMServer.new(port) 
-      @threads ||= {}
-      { :server => @servers[port], :thread => @threads[port] }
+      @servers[port] ||= { :server => OSC::EMServer.new(port) }
+      @servers[port]
     end
     
     def self.client(host, port)

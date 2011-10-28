@@ -17,22 +17,29 @@
 require "dnssd"
 
 module OSCAccess
+  
+  module Zeroconf
 
-  class ZeroconfService
+    class Service
     
-    def initialize(name, port)
-      @name, @port = name, port
-      add
-    end
-    
-    private
-        
-    def add
-      zeroconf_registrar = Thread.new do
-        registrar = DNSSD::Service.new
-        registrar.register @name, '_osc._udp', nil, @port, do |r|
-        end
+      def initialize(name, port)
+        @name, @port = name, port
       end
+        
+      def start
+        @thread = Thread.new do
+          registrar = DNSSD::Service.new
+          registrar.register @name, '_osc._udp', nil, @port, do |r|
+          end
+        end
+        self
+      end
+    
+      def stop
+        @thread.kill unless @thread.nil?
+        self
+      end
+    
     end
       
   end
