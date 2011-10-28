@@ -125,6 +125,17 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal(4, received)  
   end  
   
+  def test_osc_receive_accessor
+    sleep(0.5)
+    obj = StubObject.new
+    obj.osc_start(:input_port => 8084)
+    obj.osc_receive("/test_osc_receive_accessor", :accessor => :data)
+    client = OSC::Client.new("localhost", 8084)
+    client.send( OSC::Message.new( "/test_osc_receive_accessor", "hi from test_osc_receive_accessor"))  
+    sleep(0.5)
+    assert_equal("hi from test_osc_receive_accessor", obj.data)  
+  end  
+  
   def test_load_map_inline_proc
     received = nil
     map = {

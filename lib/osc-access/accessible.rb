@@ -92,7 +92,10 @@ module OSCAccess
       val = osc_process_arg_option(msg, options)
       val = osc_translate(val, options[:translate]) unless options[:translate].nil?
       osc_send(msg) if options[:thru]
+      accessor = options[:accessor]
+      self.send("#{accessor.to_s}=", val) unless accessor.nil?
       yield(self, val, msg) unless block.nil?
+      
     end
 
     private
