@@ -78,7 +78,7 @@ module OSCAccess
     end
     
     def osc_send_accessors
-      @osc_accessors.each { |a| osc_send(a) }
+      @osc_accessors.each { |a| osc_send(a[:property]) }
     end
     
     def osc_load_map(map)
