@@ -54,6 +54,42 @@ class AccessibleTest < Test::Unit::TestCase
     assert_equal("hi friend", received)
   end
   
+  def test_osc_send_accessor_translate
+    sleep(0.5)
+    received = nil
+    server = OSC::EMServer.new(8091)
+    server.add_method("/test_osc_send_accessor_translate") do |message|
+      received = message.args[0]
+    end 
+    Thread.new { server.run }
+    sleep(0.5)
+    obj = StubObject.new
+    obj.osc_receive("/test_osc_send_accessor_translate", :accessor => :data, :translate => 0..127)
+    obj.osc_output(:port => 8091, :host => "localhost")
+    obj.data = 63
+    obj.osc_send(:data)
+    sleep(0.5)
+    assert_equal(0.5, received.round(1))
+  end
+  
+  def test_osc_send_accessor
+    sleep(0.5)
+    received = nil
+    server = OSC::EMServer.new(8090)
+    server.add_method("/test_osc_send_accessor") do |message|
+      received = message.args[0]
+    end 
+    Thread.new { server.run }
+    sleep(0.5)
+    obj = StubObject.new
+    obj.osc_receive("/test_osc_send_accessor", :accessor => :data)
+    obj.osc_output(:port => 8090, :host => "localhost")
+    obj.data = "blahblah"
+    obj.osc_send(:data)
+    sleep(0.5)
+    assert_equal("blahblah", received)
+  end
+  
   def test_osc_send_msg_multi
     sleep(0.5)
     received = nil

@@ -10,6 +10,7 @@ module OSCAccess
     def osc_receive(pattern, options = {}, &block)
       osc_initialize
       @osc.receive(self, pattern, options, &block)
+      @osc_accessors << { :property => options[:accessor], :pattern => pattern, :translate => options[:translate] } unless options[:accessor].nil?
     end
 
     def osc_send(*a)
@@ -17,6 +18,15 @@ module OSCAccess
       if a.first.kind_of?(OSC::Message)
         msg = a.pop
         osc_send(*a) unless a.empty?
+      elsif a.first.kind_of?(Symbol)
+        prop = a.first  
+        accessor = @osc_accessors.find { |acc| acc[:property] == prop }
+        raw_val = self.send(prop)
+        translate = accessor[:translate]
+        val = translate.nil? ? raw_val : osc_translate(raw_val, translate, false)
+        val = [val].flatten
+        pattern = accessor[:pattern]
+        msg = OSC::Message.new(pattern, *val)
       else
         msg = OSC::Message.new(*a)
       end
@@ -62,7 +72,13 @@ module OSCAccess
       osc_output(options[:output]) unless options[:output].nil?
       
       IO.start(:zeroconf_name => options[:service_name])
+      osc_send_accessors
+      
       @osc.threads.values.last || Thread.new { loop {} }
+    end
+    
+    def osc_send_accessors
+      @osc_accessors.each { |a| osc_send(a) }
     end
     
     def osc_load_map(map)
@@ -70,10 +86,10 @@ module OSCAccess
       map.each { |attr, mapping| osc_add_map_row(attr, mapping) }      
     end
     
-    def osc_translate(value, range)
+    def osc_translate(value, range, to_local = true)
       new_vals = [value].flatten.map do |single_value|
         if range.kind_of?(Range) || range.kind_of?(Array)
-          remote = 0..1
+          remote = DefaultRemoteRange
           local = range
           type = nil
         else
@@ -81,7 +97,9 @@ module OSCAccess
           local = range[:local]
           type = range[:type]
         end
-        Analog.new(remote, local).process(value, :type => type)
+        analog = to_local ? Analog.new(remote, local) : Analog.new(local, remote)
+        type = to_local ? type : :float
+        analog.process(value, :type => type)
       end
       value.kind_of?(Array) ? new_vals : new_vals.first
     end
@@ -95,13 +113,13 @@ module OSCAccess
       accessor = options[:accessor]
       self.send("#{accessor.to_s}=", val) unless accessor.nil?
       yield(self, val, msg) unless block.nil?
-      
     end
 
     private
 
     def osc_initialize(options = {})
       @osc ||= IO.new(options)
+      @osc_accessors ||= []
     end
         
     def osc_initialize_from_class_def
