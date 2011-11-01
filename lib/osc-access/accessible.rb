@@ -10,8 +10,11 @@ module OSCAccess
     def osc_receive(pattern, options = {}, &block)
       osc_initialize
       @osc_receiver.add_receiver(self, pattern, options, &block)
-      @osc_properties << EmittableProperty.new(options[:accessor], pattern, :translate => options[:translate]) unless options[:accessor].nil?
-      @osc_properties << EmittableProperty.new(options[:initializer], pattern, :translate => options[:translate]) unless options[:initialize].nil?
+      if !options[:accessor].nil?
+        @osc_properties << EmittableProperty.new(options[:accessor], pattern, :translate => options[:translate])
+      elsif !options[:initialize].nil?
+        @osc_properties << EmittableProperty.new(options[:initializer], pattern, :translate => options[:translate])
+      end
     end
         
     def osc_send_property(prop)
