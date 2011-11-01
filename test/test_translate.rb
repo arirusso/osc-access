@@ -2,7 +2,7 @@
 
 require 'helper'
 
-class RangeAnalogTest < Test::Unit::TestCase
+class TranslateTest < Test::Unit::TestCase
 
   include OSCAccess
   include TestHelper

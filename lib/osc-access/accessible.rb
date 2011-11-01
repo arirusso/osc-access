@@ -9,33 +9,26 @@ module OSCAccess
 
     def osc_receive(pattern, options = {}, &block)
       osc_initialize
-      @osc.receive(self, pattern, options, &block)
-      @osc_accessors << { :property => options[:accessor], :pattern => pattern, :translate => options[:translate] } unless options[:accessor].nil?
+      @osc_receiver.add_receiver(self, pattern, options, &block)
+      @osc_properties << EmittableProperty.new(options[:accessor], pattern, :translate => options[:translate]) unless options[:accessor].nil?
+      @osc_properties << EmittableProperty.new(options[:initializer], pattern, :translate => options[:translate]) unless options[:initialize].nil?
     end
-
+        
+    def osc_send_property(prop)
+      prop = @osc_properties.find { |ep| ep.subject == prop } if prop.kind_of?(Symbol)
+      val = prop.value(self)
+      msg = OSC::Message.new(prop.pattern, *val)        
+      @osc_emitter.transmit(msg)
+    end
+    
     def osc_send(*a)
       osc_initialize
-      if a.first.kind_of?(OSC::Message)
-        msg = a.pop
-        osc_send(*a) unless a.empty?
-      elsif a.first.kind_of?(Symbol)
-        prop = a.first  
-        accessor = @osc_accessors.find { |acc| acc[:property] == prop }
-        raw_val = self.send(prop)
-        translate = accessor[:translate]
-        val = translate.nil? ? raw_val : osc_translate(raw_val, translate, false)
-        val = [val].flatten
-        pattern = accessor[:pattern]
-        msg = OSC::Message.new(pattern, *val)
-      else
-        msg = OSC::Message.new(*a)
-      end
-      @osc.transmit(msg)
+      a.first.kind_of?(Symbol) ? osc_send_property(a.first) : @osc_emitter.transmit(*a)      
     end
 
     def osc_join
       osc_initialize
-      @osc.join
+      @osc_receiver.join
     end
 
     # osc_output takes arguments as such:
@@ -47,7 +40,7 @@ module OSCAccess
     def osc_output(pair)
       osc_initialize
       ports = osc_process_ports_args(pair[:port])
-      ports.each { |port| @osc.add_client(pair[:host], port) }
+      ports.each { |port| @osc_emitter.add_client(pair[:host], port) }
     end
     
     # osc_input takes arguments as such:
@@ -60,7 +53,7 @@ module OSCAccess
     def osc_input(*args)
       osc_initialize
       ports = osc_process_ports_args(args)
-      ports.each { |port| @osc.add_server(port) }
+      ports.each { |port| @osc_receiver.add_server(port) }
     end
     
     def osc_start(options = {})
@@ -71,14 +64,14 @@ module OSCAccess
       osc_input(options[:input_port]) unless options[:input_port].nil?
       osc_output(options[:output]) unless options[:output].nil?
       
-      IO.start(:zeroconf_name => options[:service_name])
-      osc_send_accessors
+      osc_send_all_properties
       
-      @osc.threads.values.last || Thread.new { loop {} }
+      @osc_receiver.threads.last || Thread.new { loop {} }
     end
     
-    def osc_send_accessors
-      @osc_accessors.each { |a| osc_send(a[:property]) }
+    def osc_send_all_properties
+      osc_initialize
+      @osc_properties.each { |prop| osc_send_property(prop) }
     end
     
     def osc_load_map(map)
@@ -86,22 +79,8 @@ module OSCAccess
       map.each { |attr, mapping| osc_add_map_row(attr, mapping) }      
     end
     
-    def osc_translate(value, range, to_local = true)
-      new_vals = [value].flatten.map do |single_value|
-        if range.kind_of?(Range) || range.kind_of?(Array)
-          remote = DefaultRemoteRange
-          local = range
-          type = nil
-        else
-          remote = range[:remote] || DefaultRemoteRange
-          local = range[:local]
-          type = range[:type]
-        end
-        analog = to_local ? Analog.new(remote, local) : Analog.new(local, remote)
-        type = to_local ? type : :float
-        analog.process(value, :type => type)
-      end
-      value.kind_of?(Array) ? new_vals : new_vals.first
+    def osc_translate(value, range, options = {})
+      Translate.using(value, range, options)
     end
 
     protected
@@ -118,20 +97,22 @@ module OSCAccess
     private
 
     def osc_initialize(options = {})
-      @osc ||= IO.new(options)
-      @osc_accessors ||= []
+      @osc_emitter ||= Emitter.new
+      @osc_properties ||= []
+      @osc_receiver ||= Receiver.new
     end
         
     def osc_initialize_from_class_def
       scheme = self.class.osc_class_scheme
-      scheme.inputs.each { |port| @osc.add_server(port) }
-      scheme.outputs.each { |hash| @osc.add_client(hash) }
+      scheme.inputs.each { |port| @osc_receiver.add_server(port) }
+      scheme.outputs.each { |hash| @osc_emitter.add_client(hash) }
       scheme.receivers.each { |hash| osc_receive(hash[:pattern], hash[:options], &hash[:action]) }  
     end
     
     def osc_add_map_row(pattern, mapping)
+      options = mapping.kind_of?(Hash) ? mapping : {}
       action = mapping.kind_of?(Hash) ? mapping[:action] : mapping
-      osc_receive(pattern, mapping, &action)
+      osc_receive(pattern, options, &action)
     end
     
     def osc_process_arg_option(msg, options = {})

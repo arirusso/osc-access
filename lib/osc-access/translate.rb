@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 module OSCAccess
-
+  
   module Analog
-    
+
     def self.new(from, to, options = {})
       case to
         when Array then Set.new(from, to, options)
@@ -45,6 +45,29 @@ module OSCAccess
         @to_set.at(index)
       end
 
+    end
+
+  end
+  
+  class Translate
+    
+    def self.using(value, range, options = {})
+      to_local = options[:to_local].nil? ? true : options[:to_local]
+      new_vals = [value].flatten.map do |single_value|
+        if range.kind_of?(Range) || range.kind_of?(Array)
+          remote = DefaultRemoteRange
+          local = range
+          type = options[:type]
+        else
+          remote = range[:remote] || DefaultRemoteRange
+          local = range[:local]
+          type = range[:type] || options[:type]
+        end
+        analog = to_local ? Analog.new(remote, local) : Analog.new(local, remote)
+        type = to_local ? type : :float
+        analog.process(value, :type => type)
+      end
+      value.kind_of?(Array) ? new_vals : new_vals.first
     end
 
   end

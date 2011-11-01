@@ -14,10 +14,12 @@ require "osc-access/accessible"
 require "osc-access/class"
 
 # classes
-require "osc-access/analog"
 require "osc-access/class_scheme"
-require "osc-access/io"
+require "osc-access/emittable_property"
+require "osc-access/emitter"
 require "osc-access/message"
+require "osc-access/receiver"
+require "osc-access/translate"
 require "osc-access/zeroconf"
 
 # other
