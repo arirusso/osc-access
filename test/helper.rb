@@ -8,6 +8,12 @@ require 'osc-access'
 
 module TestHelper
   
+  $port_counter = 8000
+  
+  def self.next_port
+    $port_counter += 1
+  end
+  
   class StubObject
     
     include OSCAccessible
