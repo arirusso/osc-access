@@ -13,7 +13,7 @@ module OSCAccess
       if !options[:accessor].nil?
         @osc_properties << EmittableProperty.new(options[:accessor], pattern, :translate => options[:translate])
       elsif !options[:initialize].nil?
-        @osc_properties << EmittableProperty.new(options[:initializer], pattern, :translate => options[:translate])
+        @osc_properties << EmittableProperty.new(options[:initialize], pattern, :translate => options[:translate])
       end
     end
         
