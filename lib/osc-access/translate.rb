@@ -53,19 +53,23 @@ module OSCAccess
     
     def self.using(value, range, options = {})
       to_local = options[:to_local].nil? ? true : options[:to_local]
-      new_vals = [value].flatten.map do |single_value|
-        if range.kind_of?(Range) || range.kind_of?(Array)
-          remote = DefaultRemoteRange
-          local = range
-          type = options[:type]
+      new_vals = [value].flatten.compact.map do |single_val|
+        if range == :boolean
+          to_local ? (single_val <= 0 ? false : true) : (single_val ? 1 : 0)
         else
-          remote = range[:remote] || DefaultRemoteRange
-          local = range[:local]
-          type = range[:type] || options[:type]
+          if range.kind_of?(Range) || range.kind_of?(Array)
+            remote = DefaultRemoteRange
+            local = range
+            type = options[:type]
+          else
+            remote = range[:remote] || DefaultRemoteRange
+            local = range[:local]
+            type = range[:type] || options[:type]
+          end
+          analog = to_local ? Analog.new(remote, local) : Analog.new(local, remote)
+          type = to_local ? type : :float
+          analog.process(single_val, :type => type)
         end
-        analog = to_local ? Analog.new(remote, local) : Analog.new(local, remote)
-        type = to_local ? type : :float
-        analog.process(value, :type => type)
       end
       value.kind_of?(Array) ? new_vals : new_vals.first
     end
