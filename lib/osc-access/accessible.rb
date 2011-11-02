@@ -20,7 +20,7 @@ module OSCAccess
     def osc_send_property(prop)
       prop = @osc_properties.find { |ep| ep.subject == prop } if prop.kind_of?(Symbol)
       val = prop.value(self)
-      msg = OSC::Message.new(prop.pattern, *val)        
+      msg = OSC::Message.new(prop.pattern, *val)
       @osc_emitter.transmit(msg)
     end
     
