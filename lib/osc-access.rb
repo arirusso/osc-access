@@ -27,7 +27,7 @@ require "osc-access/default"
 
 module OSCAccess
   
-  VERSION = "0.0.8"
+  VERSION = "0.0.9"
   
 end
 OSCAccessible = OSCAccess::Accessible
