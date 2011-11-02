@@ -14,12 +14,7 @@ module OSCAccess
     end
     
     def transmit(*a)
-      if a.first.kind_of?(OSC::Message)
-        msg = a.pop
-        transmit(*a) unless a.empty?
-      else
-        msg = OSC::Message.new(*a)
-      end
+      msg = a.first.kind_of?(OSC::Message) ? a.first : OSC::Message.new(*a)
       @clients.each { |c| c.send(msg) }
     end
     
