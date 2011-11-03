@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 #
 # OSCAccess
-# Control Ruby object with OSC
+# Control Ruby objects with OSC
 # (c)2011 Ari Russo and licensed under the Apache 2.0 License
 # 
 
