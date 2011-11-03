@@ -3,21 +3,27 @@ module OSCAccess
 
   class EmittableProperty
     
-    attr_reader :pattern, :subject
+    attr_reader :arg, :pattern, :subject, :on_update
     
     def initialize(subject, pattern, options = {})
       @subject = subject
       @pattern = pattern
+      @arg = options[:arg]
       @translate = options[:translate]
+      @on_update = options[:update]
     end
     
-    def value(target_obj)        
-      raw_val = case @subject
+    def value(target_obj)
+      val = case @subject
         when Proc then @subject.call(target_obj)
         when Symbol then target_obj.send(@subject)
       end
-      val = @translate.nil? ? raw_val : Translate.using(raw_val, @translate, :to_local => false)
-      [val].flatten     
+      [val].flatten   
+    end
+    
+    def translated(target_obj)        
+      raw_val = value(target_obj)
+      @translate.nil? ? raw_val : Translate.using(raw_val, @translate, :to_local => false)  
     end
     
   end

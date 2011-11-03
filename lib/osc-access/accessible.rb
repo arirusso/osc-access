@@ -11,17 +11,20 @@ module OSCAccess
       osc_initialize
       @osc_receiver.add_receiver(self, pattern, options, &block)
       if !options[:accessor].nil?
-        @osc_properties << EmittableProperty.new(options[:accessor], pattern, :translate => options[:translate])
+        @osc_properties << EmittableProperty.new(options[:accessor], pattern, options)
       elsif !options[:initialize].nil?
-        @osc_properties << EmittableProperty.new(options[:initialize], pattern, :translate => options[:translate])
+        @osc_properties << EmittableProperty.new(options[:initialize], pattern, options)
       end
     end
         
     def osc_send_property(prop)
       prop = @osc_properties.find { |ep| ep.subject == prop } if prop.kind_of?(Symbol)
-      val = prop.value(self)
+      val = prop.translated(self)
       msg = OSC::Message.new(prop.pattern, *val)
       @osc_emitter.transmit(msg)
+      local_msg = OSC::Message.new(prop.pattern, *prop.value(self))
+      local_val = osc_process_arg_option(local_msg, :arg => prop.arg)
+      prop.on_update.call(self, local_val, local_msg) unless prop.on_update.nil?
     end
     
     def osc_send(*a)
@@ -67,7 +70,7 @@ module OSCAccess
       osc_input(options[:input_port]) unless options[:input_port].nil?
       osc_output(options[:output]) unless options[:output].nil?
       
-      osc_send_all_properties
+      Thread.new { sleep(1); osc_send_all_properties }
       
       @osc_receiver.threads.last || Thread.new { loop {} }
     end
@@ -95,6 +98,7 @@ module OSCAccess
       accessor = options[:accessor]
       self.send("#{accessor.to_s}=", val) unless accessor.nil?
       yield(self, val, msg) unless block.nil?
+      options[:update].call(self, val, msg) unless options[:update].nil?
     end
 
     private
