@@ -97,26 +97,6 @@ class AccessibleTest < Test::Unit::TestCase
     sleep(0.5)
     assert_equal("blahblah", received)
   end
-  
-  def test_osc_send_msg_multi
-    sleep(0.5)
-    received = nil
-    port = TestHelper.next_port
-    
-    server = OSC::EMServer.new(port)
-    server.add_method("/test_osc_output") do |message|
-      received = message.args[0]
-    end 
-    Thread.new { server.run }
-    sleep(0.5)
-    obj = StubObject.new
-    obj.osc_output(:port => port, :host => "localhost")
-    obj.osc_send(OSC::Message.new("/test_osc_output", "hi friend"), 
-                 OSC::Message.new("/test_osc_output", "hello friend"),
-                 OSC::Message.new("/test_osc_output", "three amigos"))
-    sleep(0.5)
-    assert_equal("three amigos", received)
-  end
     
   def test_osc_input
     sleep(0.5)
