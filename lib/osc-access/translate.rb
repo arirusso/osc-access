@@ -20,13 +20,16 @@ module OSCAccess
       end
 
       def process(input, options = {})
-        to_range_length = @to_range.last - @to_range.first
-        from_range_length = @from_range.last - @from_range.first
-        factor = to_range_length.to_f / from_range_length.to_f
-        computed_value = (input.to_f * factor.to_f) + @to_range.first # offset
+        to_range_len = (@to_range.last - @to_range.first).abs
+        from_range_len = (@from_range.last - @from_range.first).abs
+        abs_input = input - @from_range.first
+        proportion = to_range_len.to_f / from_range_len.to_f
+        abs_output = proportion.to_f * abs_input.to_f
+        output = abs_output + @to_range.first
+
         type = options[:type] || @type
         float_requested = !type.nil? && type.to_s.downcase == "float"
-        float_requested ? computed_value : computed_value.to_i
+        float_requested ? output : output.to_i
       end
 
     end
