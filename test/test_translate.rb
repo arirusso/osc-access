@@ -19,6 +19,16 @@ class TranslateTest < Test::Unit::TestCase
     assert_equal(2, output)    
   end
   
+  def test_negative_range
+    
+  end
+  
+  #def test_from_set_to_range
+  #  ra = Analog::Range.new([0, 2, 4, 8, 16, 64], 0..10)
+  #  output = ra.process(8)
+  #  assert_equal(6, output)    
+  #end
+  
   def test_range_process_float
     ra = Analog::Range.new(0..120, 0..1, :type => :float)
     output = ra.process(12)
