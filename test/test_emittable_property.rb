@@ -11,7 +11,7 @@ class EmittablePropertyTest < Test::Unit::TestCase
     obj = StubObject.new
     obj.data = 101
     prop = EmittableProperty.new(:data, "pattern", :translate => { :local => 0..127, :remote => 0..1 })
-    output = prop.value(obj)
+    output = prop.translated(obj)
     assert_equal(0.8, output.first.round(1))      
   end
   

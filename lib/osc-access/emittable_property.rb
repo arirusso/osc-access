@@ -3,14 +3,14 @@ module OSCAccess
 
   class EmittableProperty
     
-    attr_reader :arg, :pattern, :subject, :on_update
+    attr_reader :action, :arg, :pattern, :subject
     
     def initialize(subject, pattern, options = {})
       @subject = subject
       @pattern = pattern
       @arg = options[:arg]
       @translate = options[:translate]
-      @on_update = options[:update]
+      @action = options[:action]
     end
     
     def value(target_obj)

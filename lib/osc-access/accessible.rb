@@ -24,7 +24,7 @@ module OSCAccess
       @osc_emitter.transmit(msg)
       local_msg = OSC::Message.new(prop.pattern, *prop.value(self))
       local_val = osc_process_arg_option(local_msg, :arg => prop.arg)
-      prop.on_update.call(self, local_val, local_msg) unless prop.on_update.nil?
+      prop.action.call(self, local_val, local_msg) unless prop.action.nil?
     end
     
     def osc_send(*a)
@@ -98,7 +98,6 @@ module OSCAccess
       accessor = options[:accessor]
       self.send("#{accessor.to_s}=", val) unless accessor.nil?
       yield(self, val, msg) unless block.nil?
-      options[:update].call(self, val, msg) unless options[:update].nil?
     end
 
     private
