@@ -203,6 +203,7 @@ class AccessibleTest < Test::Unit::TestCase
     obj.osc_start
     obj.osc_load_map(map)
     client = OSC::Client.new("localhost", port)
+    sleep(0.5)
     client.send( OSC::Message.new( "/test_load_map", "hullo from test_load_map!"))  
     sleep(0.5)
     assert_equal("hullo from test_load_map!", received)  
