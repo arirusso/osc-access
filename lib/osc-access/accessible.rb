@@ -70,7 +70,10 @@ module OSCAccess
       osc_input(options[:input_port]) unless options[:input_port].nil?
       osc_output(options[:output]) unless options[:output].nil?
       
-      Thread.new { sleep(1); osc_send_all_properties }
+      Thread.new do 
+        sleep(1) 
+        osc_send_all_properties
+      end
       
       @osc_receiver.threads.last || Thread.new { loop {} }
     end
