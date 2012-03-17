@@ -32,9 +32,9 @@ module OSCAccess
       a.first.kind_of?(Symbol) ? osc_send_property(a.first) : @osc_emitter.transmit(*a)      
     end
 
-    def osc_join
+    def osc_join(options = {})
       osc_initialize
-      @osc_receiver.join
+      @osc_receiver.join(options)
     end
 
     # osc_output takes arguments as such:
