@@ -15,8 +15,10 @@ module OSCAccess
       @servers.values.map { |server| server[:thread] }
     end
     
-    def join
-      threads.last.join
+    def join(options = {})
+      port = options[:port]
+      thread = port.nil? ? threads.last : @servers[port][:thread]
+      thread.join
     end
     
     def add_server(port)
