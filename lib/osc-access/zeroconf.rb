@@ -29,7 +29,7 @@ module OSCAccess
       def start
         @thread = Thread.new do
           registrar = DNSSD::Service.new
-          registrar.register @name, '_osc._udp', nil, @port, do |r|
+          registrar.register @name, '_osc._udp', nil, @port do |r|
           end
         end
         self
