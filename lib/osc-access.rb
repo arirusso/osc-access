@@ -2,7 +2,7 @@
 #
 # OSCAccess
 # Control Ruby objects with OSC
-# (c)2011 Ari Russo and licensed under the Apache 2.0 License
+# (c)2011-2012 Ari Russo and licensed under the Apache 2.0 License
 # 
 
 # libs
@@ -27,7 +27,7 @@ require "osc-access/default"
 
 module OSCAccess
   
-  VERSION = "0.0.14"
+  VERSION = "0.0.15"
   
 end
 OSCAccessible = OSCAccess::Accessible
